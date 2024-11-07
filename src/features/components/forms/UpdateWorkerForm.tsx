@@ -1,12 +1,12 @@
 import React, {forwardRef, useImperativeHandle} from 'react'
-import {State, useAppDispatch} from "../../store";
-import {fetchWorkersThunk, updateWorkerThunk} from '../slices/workersSlice';
-import {PopupTypes, Worker} from '../../types';
+import {State, useAppDispatch} from "../../../store";
+import {fetchWorkersThunk, updateWorkerThunk} from '../../slices/workersSlice';
+import {PopupTypes, Worker} from '../../../types';
 import Button from '@mui/material/Button';
 import {Box, Dialog, DialogContent, DialogTitle, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {useSelector} from "react-redux";
-import {addPopup} from "../slices/popupSlice";
+import {addPopup} from "../../slices/popupSlice";
 
 
 const UpdateWorkerForm = forwardRef((props, ref) => {

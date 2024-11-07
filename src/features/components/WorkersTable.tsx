@@ -2,11 +2,11 @@ import {useSelector} from "react-redux";
 import {State, useAppDispatch} from "../../store";
 import React, {useRef} from "react";
 import {compareCoordinates, Worker} from "../../types";
-import UpdateWorkerForm from "./UpdateWorkerForm";
+import UpdateWorkerForm from "./forms/UpdateWorkerForm";
 import UniversalTable, {HeadCell} from "./UniversalTable";
 import Button from "@mui/material/Button";
 import {setCreateWorkerOpen} from "../slices/formSlices/createWorkerSlice";
-import CreateWorkerForm from "./CreateWorkerForm";
+import CreateWorkerForm from "./forms/CreateWorkerForm";
 
 const WorkersTable = () => {
     const workers = useSelector((state: State) => state.workers);

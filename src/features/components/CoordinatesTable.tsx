@@ -2,9 +2,9 @@ import {useSelector} from "react-redux";
 import {State, useAppDispatch} from "../../store";
 import React, {useRef} from "react";
 import {compareCoordinates, Coordinates, Worker} from "../../types";
-import UpdateWorkerForm from "./UpdateWorkerForm";
+import UpdateWorkerForm from "./forms/UpdateWorkerForm";
 import UniversalTable, {HeadCell} from "./UniversalTable";
-import CreateCoordinatesForm from "./CreateCoordinatesForm";
+import CreateCoordinatesForm from "./forms/CreateCoordinatesForm";
 import {setCreateCoordinatesOpen} from "../slices/formSlices/createCoordinatesSlice";
 import Button from "@mui/material/Button";
 

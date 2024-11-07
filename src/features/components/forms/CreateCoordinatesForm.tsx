@@ -1,6 +1,6 @@
 import React from 'react'
-import {State, useAppDispatch} from "../../store";
-import {Coordinates} from '../../types';
+import {State, useAppDispatch} from "../../../store";
+import {Coordinates} from '../../../types';
 import Button from '@mui/material/Button';
 import {
     Box,
@@ -9,9 +9,9 @@ import {
     DialogTitle,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import {createCoordinatesThunk, fetchCoordinatesThunk} from "../slices/coordinatesSlice";
+import {createCoordinatesThunk} from "../../slices/coordinatesSlice";
 import {useSelector} from "react-redux";
-import {setCreateCoordinatesOpen} from "../slices/formSlices/createCoordinatesSlice";
+import {setCreateCoordinatesOpen} from "../../slices/formSlices/createCoordinatesSlice";
 
 
 const CreateCoordinatesForm = () => {

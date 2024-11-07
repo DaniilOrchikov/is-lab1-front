@@ -8,7 +8,7 @@ export interface Worker {
     // startDate: Date;
     // position: Position;
     status: Status;
-    // person: Person;
+    // personId: number;
 }
 
 
@@ -30,25 +30,25 @@ export function compareCoordinates(coordA: Coordinates, coordB:Coordinates): num
 //     type: OrganizationType;
 // }
 //
-// export interface Person {
-//     eyeColor: Color;
-//     hairColor: Color;
-//     location: Location;
-//     height: number;
-//     nationality: Country;
-// }
+export interface Person {
+    eyeColor: Color;
+    hairColor: Color;
+    location: Location;
+    height: number;
+    nationality: Country;
+}
 //
 // export interface Address {
 //     street: string;
 //     zipCode: string;
 // }
 //
-// export interface Location {
-//     x: number;
-//     y: Number;
-//     z: number;
-//     name: string;
-// }
+export interface Location {
+    x: number;
+    y: Number;
+    z: number;
+    name: string;
+}
 //
 // export enum Position {
 //     DIRECTOR,
@@ -71,20 +71,20 @@ export enum Status {
 //     OPEN_JOINT_STOCK_COMPANY
 // }
 //
-// export enum Color {
-//     RED,
-//     BLACK,
-//     ORANGE,
-//     BROWN
-// }
+export enum Color {
+    RED="Red",
+    BLACK="Black",
+    ORANGE="Orange",
+    BROWN="Brown"
+}
 //
-// export enum Country {
-//     GERMANY,
-//     FRANCE,
-//     CHINA,
-//     INDIA,
-//     JAPAN
-// }
+export enum Country {
+    GERMANY="Germany",
+    FRANCE="France",
+    CHINA="China",
+    INDIA="India",
+    JAPAN="Japan"
+}
 
 export enum PopupTypes {
     ERROR,

@@ -1,10 +1,10 @@
 import React from 'react'
-import {State, useAppDispatch} from "../../store";
+import {State, useAppDispatch} from "../../../store";
 import {
     fetchWorkersThunk,
     createWorkerThunk
-} from '../slices/workersSlice';
-import {Status, Worker} from '../../types';
+} from '../../slices/workersSlice';
+import {Status, Worker} from '../../../types';
 import Button from '@mui/material/Button';
 import {
     Box,
@@ -19,8 +19,8 @@ import TextField from "@mui/material/TextField";
 import FormControl from '@mui/material/FormControl';
 import {useSelector} from "react-redux";
 import CreateCoordinatesForm from "./CreateCoordinatesForm";
-import {setCreateCoordinatesOpen} from "../slices/formSlices/createCoordinatesSlice";
-import {setCreateWorkerOpen} from "../slices/formSlices/createWorkerSlice";
+import {setCreateCoordinatesOpen} from "../../slices/formSlices/createCoordinatesSlice";
+import {setCreateWorkerOpen} from "../../slices/formSlices/createWorkerSlice";
 
 
 const CreateWorkerForm = () => {
