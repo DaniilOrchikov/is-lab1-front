@@ -18,7 +18,7 @@ import {useSelector} from "react-redux";
 import {
     setCoordinatesFormValueX,
     setCoordinatesFormValueY,
-    setCoordinatesFormOpen, resetCoordinatesForm
+    setCoordinatesFormOpen, resetCoordinatesForm, setCoordinatesFormType
 } from "../../slices/formSlices/coordinatesFormSlice";
 
 

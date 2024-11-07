@@ -18,7 +18,7 @@ import TextField from "@mui/material/TextField";
 import FormControl from '@mui/material/FormControl';
 import {useSelector} from "react-redux";
 import CoordinatesForm from "./CoordinatesForm";
-import {setCoordinatesFormOpen} from "../../slices/formSlices/coordinatesFormSlice";
+import {setCoordinatesFormOpen, setCoordinatesFormType} from "../../slices/formSlices/coordinatesFormSlice";
 import {resetWorkerForm, setWorkerFormOpen} from "../../slices/formSlices/workerFormSlice";
 
 
@@ -136,7 +136,10 @@ const WorkerForm = () => {
                             <br></br>
                             <br></br>
                             <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                <Button variant="contained" onClick={() => dispatch(setCoordinatesFormOpen(true))}>
+                                <Button variant="contained" onClick={() => {
+                                    dispatch(setCoordinatesFormOpen(true))
+                                    dispatch(setCoordinatesFormType('create'))
+                                }}>
                                     Create Coordinates
                                 </Button>
                                 <FormControl>

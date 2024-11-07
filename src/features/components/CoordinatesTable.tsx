@@ -2,7 +2,7 @@ import {useSelector} from "react-redux";
 import {RootState, useAppDispatch} from "../../store";
 import React, {useRef} from "react";
 import {Coordinates} from "../../types";
-import UniversalTable, {HeadCell} from "./UniversalTable";
+import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
 import CoordinatesForm from "./forms/CoordinatesForm";
 import {setCoordinatesFormType, setCoordinatesFormOpen} from "../slices/formSlices/coordinatesFormSlice";
 import Button from "@mui/material/Button";
@@ -14,9 +14,27 @@ const CoordinatesTable = () => {
     const refUpdateForm = useRef<{ handleClickOpen: (id: number) => void } | null>(null);
 
     const headCells = [
-        {id: 'id', numeric: true, label: 'Id'} as HeadCell<Coordinates>,
-        {id: 'x', numeric: true, label: 'X'} as HeadCell<Coordinates>,
-        {id: 'y', numeric: true, label: 'Y'} as HeadCell<Coordinates>,
+        {id: 'id', numeric: true, label: 'Id',
+            filterComponent: ({value, onChange}) => {
+                return standardFilterField({value, onChange}, "Filter Id")
+            },
+            filterFunction: (cellValue, filterValue) => {
+                return String(cellValue).includes(filterValue);
+            }} as HeadCell<Coordinates>,
+        {id: 'x', numeric: true, label: 'X',
+            filterComponent: ({value, onChange}) => {
+                return standardFilterField({value, onChange}, "Filter X")
+            },
+            filterFunction: (cellValue, filterValue) => {
+                return String(cellValue).includes(filterValue);
+            }} as HeadCell<Coordinates>,
+        {id: 'y', numeric: true, label: 'Y',
+            filterComponent: ({value, onChange}) => {
+                return standardFilterField({value, onChange}, "Filter Y")
+            },
+            filterFunction: (cellValue, filterValue) => {
+                return String(cellValue).includes(filterValue);
+            },} as HeadCell<Coordinates>,
     ];
 
     const compareCoordinates = (a: Coordinates, b: Coordinates, orderBy: keyof Coordinates) => {
