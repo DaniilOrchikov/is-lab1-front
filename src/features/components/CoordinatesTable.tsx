@@ -1,15 +1,15 @@
 import {useSelector} from "react-redux";
-import {State, useAppDispatch} from "../../store";
+import {RootState, useAppDispatch} from "../../store";
 import React, {useRef} from "react";
-import {compareCoordinates, Coordinates, Worker} from "../../types";
-import UpdateWorkerForm from "./forms/UpdateWorkerForm";
+import {Coordinates} from "../../types";
 import UniversalTable, {HeadCell} from "./UniversalTable";
-import CreateCoordinatesForm from "./forms/CreateCoordinatesForm";
-import {setCreateCoordinatesOpen} from "../slices/formSlices/createCoordinatesSlice";
+import CoordinatesForm from "./forms/CoordinatesForm";
+import {setCoordinatesFormType, setCoordinatesFormOpen} from "../slices/formSlices/coordinatesFormSlice";
 import Button from "@mui/material/Button";
+import UpdateCoordinates from "./forms/UpdateCoordinates";
 
 const CoordinatesTable = () => {
-    const coordinatesList = useSelector((state: State) => state.coordinatesList);
+    const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
 
     const refUpdateForm = useRef<{ handleClickOpen: (id: number) => void } | null>(null);
 
@@ -42,13 +42,16 @@ const CoordinatesTable = () => {
                 headCells={headCells}
                 comparator={compareCoordinates}
                 formatCellData={formatCellData}
-                updateFormRef={refUpdateForm}
+                updateRef={refUpdateForm}
             />
-            {/*<UpdateWorkerForm ref={refUpdateForm}/>*/}
-            <Button variant="contained" onClick={() => dispatch(setCreateCoordinatesOpen(true))}>
+            <UpdateCoordinates ref={refUpdateForm}/>
+            <Button variant="contained" onClick={() => {
+                dispatch(setCoordinatesFormType('create'))
+                dispatch(setCoordinatesFormOpen(true))
+            }}>
                 Create Coordinates
             </Button>
-            <CreateCoordinatesForm></CreateCoordinatesForm>
+            <CoordinatesForm></CoordinatesForm>
         </>
     );
 };

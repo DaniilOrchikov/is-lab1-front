@@ -1,15 +1,15 @@
 import {useSelector} from "react-redux";
-import {State, useAppDispatch} from "../../store";
+import {RootState, useAppDispatch} from "../../store";
 import {Worker} from "../../types";
 import {
     fetchWorkersThunk,
-    deleteWorkerThunk,
+    deleteWorkerByIdThunk,
 } from '../slices/workersSlice';
 import React, {useState} from 'react';
 
 
 const OldWorkersTable = () => {
-    const workers = useSelector((state: State) => state.workers);
+    const workers = useSelector((state: RootState) => state.workers);
     const dispatch = useAppDispatch();
 
     const frameSize = 20;
@@ -30,7 +30,7 @@ const OldWorkersTable = () => {
     };
     //
     const handleDeleteWorker = (id: number) => {
-        dispatch(deleteWorkerThunk(id));
+        dispatch(deleteWorkerByIdThunk(id));
         dispatch(fetchWorkersThunk());
         if (workers.length <= offset + 1) {
             setOffset((workers.length - frameSize) - workers.length % frameSize);

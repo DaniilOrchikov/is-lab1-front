@@ -30,7 +30,7 @@ export const updateCoordinatesThunk = createAsyncThunk(
     }
 );
 
-export const deleteCoordinatesThunk = createAsyncThunk(
+export const deleteCoordinatesByIdThunk = createAsyncThunk(
     'coordinates/deleteCoordinates',
     async (id: number) => {
         await deleteCoordinatesById(id);
@@ -58,7 +58,7 @@ const coordinatesSlice = createSlice({
                     state[index] = action.payload;
                 }
             })
-            .addCase(deleteCoordinatesThunk.fulfilled, (state, action: PayloadAction<number>) => {
+            .addCase(deleteCoordinatesByIdThunk.fulfilled, (state, action: PayloadAction<number>) => {
                 const index = state.findIndex(coordinates => coordinates.id === action.payload);
                 if (index !== -1) {
                     state.splice(index, 1);

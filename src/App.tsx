@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect} from 'react';
 import './App.css';
 import WorkersTable from "./features/components/WorkersTable";
-import {useAppDispatch} from "./store";
+import {RootState, useAppDispatch} from "./store";
 import {fetchWorkersThunk} from "./features/slices/workersSlice";
 import {fetchCoordinatesThunk} from "./features/slices/coordinatesSlice";
 import {Box, Tab, Tabs} from "@mui/material";
@@ -10,6 +10,9 @@ import Header from "./features/components/Header";
 import PopupManager from "./features/components/PopupManager";
 import CoordinatesTable from "./features/components/CoordinatesTable";
 import CustomTabPanel from "./features/components/CustomTabPanel";
+import {useSelector} from "react-redux";
+import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
+
 
 function MenuIcon() {
     return null;

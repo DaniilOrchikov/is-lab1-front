@@ -1,16 +1,16 @@
 import {useSelector} from "react-redux";
-import {State, useAppDispatch} from "../../store";
+import {RootState, useAppDispatch} from "../../store";
 import React, {useRef} from "react";
 import {compareCoordinates, Worker} from "../../types";
-import UpdateWorkerForm from "./forms/UpdateWorkerForm";
 import UniversalTable, {HeadCell} from "./UniversalTable";
 import Button from "@mui/material/Button";
-import {setCreateWorkerOpen} from "../slices/formSlices/createWorkerSlice";
-import CreateWorkerForm from "./forms/CreateWorkerForm";
+import {resetWorkerForm, setWorkerFormOpen, setWorkerFormType} from "../slices/formSlices/workerFormSlice";
+import WorkerForm from "./forms/WorkerForm";
+import UpdateWorker from "./forms/UpdateWorker"
 
 const WorkersTable = () => {
-    const workers = useSelector((state: State) => state.workers);
-    const coordinatesList = useSelector((state: State) => state.coordinatesList);
+    const workers = useSelector((state: RootState) => state.workers);
+    const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
 
     const refUpdateForm = useRef<{ handleClickOpen: (id: number) => void } | null>(null);
 
@@ -57,13 +57,16 @@ const WorkersTable = () => {
                 headCells={headCells}
                 comparator={compareWorkers}
                 formatCellData={formatCellData}
-                updateFormRef={refUpdateForm}
+                updateRef={refUpdateForm}
             />
-            <UpdateWorkerForm ref={refUpdateForm}/>
-            <Button variant="contained" onClick={() => dispatch(setCreateWorkerOpen(true))}>
+            <UpdateWorker ref={refUpdateForm}/>
+            <Button variant="contained" onClick={() => {
+                dispatch(setWorkerFormOpen(true))
+                dispatch(setWorkerFormType('create'))
+            }}>
                 Create Worker
             </Button>
-            <CreateWorkerForm></CreateWorkerForm>
+            <WorkerForm></WorkerForm>
         </>
     );
 };

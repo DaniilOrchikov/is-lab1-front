@@ -22,12 +22,13 @@ export const updateWorkerThunk = createAsyncThunk(
     'workers/updateWorker',
     async (worker:Worker) => {
         await updateWorkerById(worker);
+        console.log(worker.coordinatesId)
         store.dispatch(fetchWorkersThunk());
         return worker;
     }
 );
 
-export const deleteWorkerThunk = createAsyncThunk(
+export const deleteWorkerByIdThunk = createAsyncThunk(
     'workers/deleteWorker',
     async (id: number) => {
         await deleteWorkerById(id);
@@ -55,7 +56,7 @@ const workersSlice = createSlice({
                     state[index] = action.payload;
                 }
             })
-            .addCase(deleteWorkerThunk.fulfilled, (state, action: PayloadAction<number>) => {
+            .addCase(deleteWorkerByIdThunk.fulfilled, (state, action: PayloadAction<number>) => {
                 const index = state.findIndex(worker => worker.id === action.payload);
                 if (index !== -1) {
                     state.splice(index, 1);

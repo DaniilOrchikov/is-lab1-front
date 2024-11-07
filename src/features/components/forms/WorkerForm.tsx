@@ -1,8 +1,7 @@
-import React from 'react'
-import {State, useAppDispatch} from "../../../store";
+import React, {useEffect} from 'react'
+import {RootState, useAppDispatch} from "../../../store";
 import {
-    fetchWorkersThunk,
-    createWorkerThunk
+    createWorkerThunk, deleteWorkerByIdThunk, updateWorkerThunk
 } from '../../slices/workersSlice';
 import {Status, Worker} from '../../../types';
 import Button from '@mui/material/Button';
@@ -18,16 +17,16 @@ import {
 import TextField from "@mui/material/TextField";
 import FormControl from '@mui/material/FormControl';
 import {useSelector} from "react-redux";
-import CreateCoordinatesForm from "./CreateCoordinatesForm";
-import {setCreateCoordinatesOpen} from "../../slices/formSlices/createCoordinatesSlice";
-import {setCreateWorkerOpen} from "../../slices/formSlices/createWorkerSlice";
+import CoordinatesForm from "./CoordinatesForm";
+import {setCoordinatesFormOpen} from "../../slices/formSlices/coordinatesFormSlice";
+import {resetWorkerForm, setWorkerFormOpen} from "../../slices/formSlices/workerFormSlice";
 
 
-const CreateWorkerForm = () => {
-    const createWorkerFormOpen = useSelector((state: State) => state.createWorkerFormOpen);
+const WorkerForm = () => {
+    const workerForm = useSelector((state: RootState) => state.workerForm);
     const [coordinatesId, setCoordinatesId] = React.useState("");
     const [status, setStatus] = React.useState<Status>(Status.REGULAR);
-    const coordinatesList = useSelector((state: State) => state.coordinatesList);
+    const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
     const handleCoordinatesChange = (event: SelectChangeEvent) => {
         setCoordinatesId(event.target.value);
     };
@@ -37,7 +36,7 @@ const CreateWorkerForm = () => {
     };
 
     const handleClose = () => {
-        dispatch(setCreateWorkerOpen(false));
+        dispatch(setWorkerFormOpen(false));
     };
     const dispatch = useAppDispatch();
 
@@ -59,23 +58,47 @@ const CreateWorkerForm = () => {
         }
 
         let worker: Worker = {
-            id: -1,
+            id: workerForm.currentWorkerId,
             name: name,
             salary: salary,
             rating: rating,
             coordinatesId: parseInt(coordinatesId),
-            status:status
+            status: status
         };
-        dispatch(createWorkerThunk(worker));
+        if (workerForm.type === 'update') {
+            dispatch(updateWorkerThunk(worker))
+        } else {
+            dispatch(createWorkerThunk(worker));
+        }
+
+        dispatch(resetWorkerForm())
         handleClose()
         setCoordinatesId("")
     }
+
+    const handleDeleteWorker = () => {
+        dispatch(deleteWorkerByIdThunk(workerForm.currentWorkerId))
+        dispatch(resetWorkerForm())
+        handleClose()
+        setCoordinatesId("")
+    }
+
+    useEffect(() => {
+        if (workerForm.valueStatus !== null) {
+            setStatus(workerForm.valueStatus);
+        }
+    }, [workerForm.valueStatus]);
+    useEffect(() => {
+        if (workerForm.valueCoordinatesId !== null) {
+            setCoordinatesId(workerForm.valueCoordinatesId.toString())
+        }
+    }, [workerForm.valueCoordinatesId]);
 
 
     return (
         <Box>
             <Dialog
-                open={createWorkerFormOpen}
+                open={workerForm.open}
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -83,15 +106,19 @@ const CreateWorkerForm = () => {
                 <DialogTitle id="alert-dialog-title">
                     Create Worker
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent >
                     <Box>
                         <form onSubmit={handleAddWorker}>
-                            <TextField name="name" label="Name" variant="standard" required/>
+                            <TextField name="name" label="Name" variant="standard" required
+                                       defaultValue={workerForm.valueName !== null ? workerForm.valueName : ''}
+                            />
                             <TextField name="salary" label="Salary" variant="standard" type={'number'} required
-                                       InputProps={{inputProps: {min: 1}}}/>
+                                       InputProps={{inputProps: {min: 1}}}
+                                       defaultValue={workerForm.valueSalary !== null ? workerForm.valueSalary : ''}/>
                             <TextField name="rating" label="Rating" variant="standard" type={'number'} required
-                                       InputProps={{inputProps: {min: 1}}}/>
-                            <FormControl variant="outlined" fullWidth sx={{width: 150, marginTop:"3%"}}>
+                                       InputProps={{inputProps: {min: 1}}}
+                                       defaultValue={workerForm.valueRating !== null ? workerForm.valueRating : ''}/>
+                            <FormControl variant="outlined" fullWidth sx={{width: 150, marginTop: "3%"}}>
                                 <InputLabel>Status</InputLabel>
                                 <Select
                                     id="status-select"
@@ -108,7 +135,10 @@ const CreateWorkerForm = () => {
                             </FormControl>
                             <br></br>
                             <br></br>
-                            <Box sx={{display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+                            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <Button variant="contained" onClick={() => dispatch(setCoordinatesFormOpen(true))}>
+                                    Create Coordinates
+                                </Button>
                                 <FormControl>
                                     <InputLabel>Coordinates</InputLabel>
                                     <Select
@@ -125,18 +155,18 @@ const CreateWorkerForm = () => {
                                         }
                                     </Select>
                                 </FormControl>
-                                <Button variant="contained" onClick={()=>dispatch(setCreateCoordinatesOpen(true))}>
-                                    Create Coordinates
-                                </Button>
                             </Box>
 
                             <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
-                                <Button variant="contained" type="submit" sx={{marginRight: '2%'}}>Create
-                                    Worker</Button>
+                                {workerForm.type === 'update' ?
+                                    (<Button variant="contained" color="error" sx={{marginRight: '2%'}}
+                                             onClick={handleDeleteWorker}>Delete</Button>) : ""}
+                                <Button variant="contained" type="submit"
+                                        sx={{marginRight: '2%'}}>{workerForm.type === 'update' ? "Update " : "Create "}</Button>
                                 <Button variant="outlined" onClick={handleClose}>Close</Button>
                             </Box>
                         </form>
-                        <CreateCoordinatesForm></CreateCoordinatesForm>
+                        <CoordinatesForm></CoordinatesForm>
                     </Box>
                 </DialogContent>
             </Dialog>
@@ -144,4 +174,4 @@ const CreateWorkerForm = () => {
     );
 };
 
-export default CreateWorkerForm;
+export default WorkerForm;

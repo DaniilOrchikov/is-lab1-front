@@ -67,7 +67,7 @@ interface UniversalTableProps<T> {
     headCells: HeadCell<T>[];
     comparator: (a: T, b: T, orderBy: keyof T) => number;
     formatCellData: (columnId: keyof T, data: T[keyof T]) => React.ReactNode;
-    updateFormRef: React.RefObject<{ handleClickOpen: (id: number) => void }>;
+    updateRef: React.RefObject<{ handleClickOpen: (id: number) => void }>;
 }
 
 const UniversalTable = <T extends { id: number }>({
@@ -75,7 +75,7 @@ const UniversalTable = <T extends { id: number }>({
                                                       headCells,
                                                       comparator,
                                                       formatCellData,
-                                                      updateFormRef,
+                                                      updateRef,
                                                   }: UniversalTableProps<T>) => {
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState<keyof T>(headCells[0].id);
@@ -112,8 +112,8 @@ const UniversalTable = <T extends { id: number }>({
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
     const handleUpdateItem = (id: number) => {
-        if (updateFormRef.current) {
-            updateFormRef.current.handleClickOpen(id);
+        if (updateRef.current) {
+            updateRef.current.handleClickOpen(id);
         }
     };
 

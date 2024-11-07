@@ -1,11 +1,11 @@
 import {Alert, Box} from "@mui/material";
 import React from "react";
 import {useSelector} from "react-redux";
-import {State} from "../../store";
+import {RootState} from "../../store";
 import {PopupTypes} from "../../types";
 
 const PopupManager = () => {
-    const popups = useSelector((state: State) => state.popups);
+    const popups = useSelector((state: RootState) => state.popups);
 
     return (
         <Box sx={{position: 'absolute', top: '10%', right: '1%', marginRight: '2%', width: '15%'}}>
