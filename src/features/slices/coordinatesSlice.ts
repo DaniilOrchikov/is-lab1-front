@@ -2,10 +2,10 @@ import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {Coordinates, PopupTypes} from '../../types';
 import {
     fetchCoordinates, createCoordinates, updateCoordinatesById, deleteCoordinatesById
-} from '../api/api';
+} from '../api';
 import store from "../../store";
-import {addPopup, deletePopup} from "./popupSlice";
-import {fetchWorkersThunk} from "./workersSlice";
+import {addPopup} from "./popupSlice";
+import {setWorkerFormValueCoordinatesId} from "./formSlices/workerFormSlice";
 
 export const fetchCoordinatesThunk = createAsyncThunk('coordinates/fetchCoordinates', async () => {
     return await fetchCoordinates();
@@ -17,6 +17,7 @@ export const createCoordinatesThunk = createAsyncThunk(
         const id = await createCoordinates(coordinates) as number;
         store.dispatch(fetchCoordinatesThunk());
         store.dispatch(addPopup({message: `Coordinates successfully added`, duration: 5000, type: PopupTypes.SUCCESS}))
+        store.dispatch(setWorkerFormValueCoordinatesId(id))
         return {...coordinates, id: id} as Coordinates
     }
 );

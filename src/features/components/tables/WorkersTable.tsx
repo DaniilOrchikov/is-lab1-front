@@ -1,18 +1,24 @@
 import {useSelector} from "react-redux";
-import {RootState, useAppDispatch} from "../../store";
+import {RootState, useAppDispatch} from "../../../store";
 import React, {useRef} from "react";
-import {compareCoordinates, Status, Worker} from "../../types";
+import {Color, compareCoordinates, Status, Worker} from "../../../types";
 import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
 import Button from "@mui/material/Button";
-import {setWorkerFormOpen, setWorkerFormType} from "../slices/formSlices/workerFormSlice";
-import WorkerForm from "./forms/WorkerForm";
-import UpdateWorker from "./forms/UpdateWorker"
+import {
+    setWorkerFormCanUpdateObject,
+    setWorkerFormOpen,
+    setWorkerFormType
+} from "../../slices/formSlices/workerFormSlice";
+import WorkerForm from "../forms/WorkerForm";
+import UpdateWorker from "../forms/UpdateWorker"
 import {MenuItem, Select} from "@mui/material";
-import TextField from "@mui/material/TextField";
+import CreateWorkerButton from "../buttons/CreateWorkerButton";
 
 const WorkersTable = () => {
     const workers = useSelector((state: RootState) => state.workers);
     const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
+    const organizations = useSelector((state: RootState) => state.organizations);
+    const persons = useSelector((state: RootState) => state.persons);
 
     const refUpdateForm = useRef<{ handleClickOpen: (id: number) => void } | null>(null);
 
@@ -73,6 +79,75 @@ const WorkersTable = () => {
                 return cellValue === filterValue;
             },
         } as HeadCell<Worker>,
+        {
+            id: 'coordinatesId',
+            numeric: false,
+            label: 'Coordinates',
+            filterComponent: ({value, onChange}) => (
+                <Select
+                    variant="standard"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    sx={{width: 120}}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {coordinatesList.map((coordinates) => (
+                        <MenuItem key={coordinates.id} value={coordinates.id}>
+                            {`(${coordinates.x}; ${coordinates.y})`}
+                        </MenuItem>
+                    ))}
+                </Select>
+            ),
+            filterFunction: (cellValue, filterValue) => {
+                return cellValue === filterValue;
+            },
+        } as HeadCell<Worker>,
+        {
+            id: 'organizationId',
+            numeric: false,
+            label: 'Organization',
+            filterComponent: ({value, onChange}) => (
+                <Select
+                    variant="standard"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    sx={{width: 120}}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {organizations.map((organization) => (
+                        <MenuItem key={organization.id} value={organization.id}>
+                            {`${organization.fullName}, rating: ${organization.rating}`}
+                        </MenuItem>
+                    ))}
+                </Select>
+            ),
+            filterFunction: (cellValue, filterValue) => {
+                return cellValue === filterValue;
+            },
+        } as HeadCell<Worker>,
+        {
+            id: 'personId',
+            numeric: false,
+            label: 'Person',
+            filterComponent: ({value, onChange}) => (
+                <Select
+                    variant="standard"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    sx={{width: 120}}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {persons.map((person) => (
+                        <MenuItem key={person.id} value={person.id}>
+                            {`eyeColor: ${person.eyeColor}, hairColor: ${person.hairColor}, height: ${person.height}, nationality: ${person.nationality}`}
+                        </MenuItem>
+                    ))}
+                </Select>
+            ),
+            filterFunction: (cellValue, filterValue) => {
+                return cellValue === filterValue;
+            },
+        } as HeadCell<Worker>
     ];
 
     const compareWorkers = (a: Worker, b: Worker, orderBy: keyof Worker) => {
@@ -98,10 +173,17 @@ const WorkersTable = () => {
             const coords = coordinatesList.find(coordinates => coordinates.id === data as number);
             return coords ? `(${coords.x}; ${coords.y})` : null;
         }
+        if (columnId === 'organizationId') {
+            const organization = organizations.find(organization => organization.id === data as number);
+            return organization ? `${organization.fullName}, rating: ${organization.rating}` : null;
+        }
+        if (columnId === 'personId') {
+            const person = persons.find(person => person.id === data as number);
+            return person ? `nationality: ${person.nationality}` : null;
+        }
         return data;
     };
 
-    const dispatch = useAppDispatch();
     return (
         <>
             <UniversalTable
@@ -112,12 +194,7 @@ const WorkersTable = () => {
                 updateRef={refUpdateForm}
             />
             <UpdateWorker ref={refUpdateForm}/>
-            <Button variant="contained" onClick={() => {
-                dispatch(setWorkerFormOpen(true))
-                dispatch(setWorkerFormType('create'))
-            }}>
-                Create Worker
-            </Button>
+            <CreateWorkerButton/>
             <WorkerForm></WorkerForm>
         </>
     );

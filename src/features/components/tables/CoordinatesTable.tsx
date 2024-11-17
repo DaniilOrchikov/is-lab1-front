@@ -1,12 +1,17 @@
 import {useSelector} from "react-redux";
-import {RootState, useAppDispatch} from "../../store";
+import {RootState, useAppDispatch} from "../../../store";
 import React, {useRef} from "react";
-import {Coordinates} from "../../types";
+import {Coordinates} from "../../../types";
 import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
-import CoordinatesForm from "./forms/CoordinatesForm";
-import {setCoordinatesFormType, setCoordinatesFormOpen} from "../slices/formSlices/coordinatesFormSlice";
+import CoordinatesForm from "../forms/CoordinatesForm";
+import {
+    setCoordinatesFormType,
+    setCoordinatesFormOpen,
+    setCoordinatesFormCanUpdateObject
+} from "../../slices/formSlices/coordinatesFormSlice";
 import Button from "@mui/material/Button";
-import UpdateCoordinates from "./forms/UpdateCoordinates";
+import UpdateCoordinates from "../forms/UpdateCoordinates";
+import CreateCoordinatesButton from "../buttons/CreateCoordinatesButton";
 
 const CoordinatesTable = () => {
     const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
@@ -51,7 +56,6 @@ const CoordinatesTable = () => {
         return data;
     };
 
-    const dispatch = useAppDispatch();
 
     return (
         <>
@@ -63,12 +67,7 @@ const CoordinatesTable = () => {
                 updateRef={refUpdateForm}
             />
             <UpdateCoordinates ref={refUpdateForm}/>
-            <Button variant="contained" onClick={() => {
-                dispatch(setCoordinatesFormType('create'))
-                dispatch(setCoordinatesFormOpen(true))
-            }}>
-                Create Coordinates
-            </Button>
+            <CreateCoordinatesButton/>
             <CoordinatesForm></CoordinatesForm>
         </>
     );

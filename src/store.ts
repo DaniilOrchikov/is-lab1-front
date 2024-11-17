@@ -8,6 +8,10 @@ import coordinatesReducer from './features/slices/coordinatesSlice';
 import coordinatesFormReducer from './features/slices/formSlices/coordinatesFormSlice';
 import workerFormReducer from './features/slices/formSlices/workerFormSlice';
 import userReducer from './features/slices/userSlice';
+import organizationReducer from "./features/slices/organizationSlice";
+import personReducer from "./features/slices/personSlice";
+import organizationFormReducer from "./features/slices/formSlices/organizationFormSlice";
+import personFormReducer from "./features/slices/formSlices/personFormSlice";
 
 const userPersistConfig = {
     key: 'user',
@@ -19,10 +23,14 @@ const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 const store = configureStore({
     reducer: {
         workers: workerReducer,
+        organizations: organizationReducer,
+        persons: personReducer,
         popups: popupReducer,
         coordinatesList: coordinatesReducer,
         coordinatesForm: coordinatesFormReducer,
+        organizationForm: organizationFormReducer,
         workerForm: workerFormReducer,
+        personForm: personFormReducer,
         user: persistedUserReducer,
     },
     middleware: (getDefaultMiddleware) =>

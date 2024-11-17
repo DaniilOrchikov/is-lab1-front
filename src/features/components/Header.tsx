@@ -5,11 +5,11 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import React from "react";
 import {logout} from "../slices/userSlice";
-import {useAppDispatch} from "../../store";
+import {RootState, useAppDispatch} from "../../store";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
-const pages = ['tables', 'queries'];
-const settings = ['Logout'];
+const pages = ['tables'];
 
 function MenuIcon() {
     return null;
@@ -18,34 +18,42 @@ function MenuIcon() {
 const Header = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const user = useSelector((state: RootState) => state.user)
 
     return (
         <AppBar position="sticky">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Box sx={{flexGrow: 1, display: { md: 'flex' }}}>
+                    <Box sx={{flexGrow: 1, display: {md: 'flex'}}}>
                         {pages.map((page) => (
                             <Button
                                 key={page}
                                 sx={{my: 2, color: 'white', display: 'block'}}
-                                onClick={()=>navigate(`/${page}`)}
+                                onClick={() => navigate(`/${page}`)}
                             >
                                 {page}
                             </Button>
                         ))}
                     </Box>
-                    <Box sx={{flexGrow: 0}}>
-                        {settings.map((setting) => (
+                    <Box sx={{flexGrow: 0, display: "flex"}}>
+                        {user.admin ?
                             <Button
-                                key={setting}
-                                sx={{my: 2, color: 'white', display: 'block'}}
+                                sx={{my: 2, color: 'white'}}
                                 onClick={() => {
-                                    dispatch(logout())
+                                    navigate("/admin")
                                 }}
                             >
-                                {setting}
+                                Admin Requests
                             </Button>
-                        ))}
+                            : ""}
+                        <Button
+                            sx={{my: 2, color: 'white'}}
+                            onClick={() => {
+                                dispatch(logout())
+                            }}
+                        >
+                            {user.name} Logout
+                        </Button>
                     </Box>
                 </Toolbar>
             </Container>

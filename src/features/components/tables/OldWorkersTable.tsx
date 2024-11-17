@@ -1,10 +1,10 @@
 import {useSelector} from "react-redux";
-import {RootState, useAppDispatch} from "../../store";
-import {Worker} from "../../types";
+import {RootState, useAppDispatch} from "../../../store";
+import {Worker} from "../../../types";
 import {
     fetchWorkersThunk,
     deleteWorkerByIdThunk,
-} from '../slices/workersSlice';
+} from '../../slices/workersSlice';
 import React, {useState} from 'react';
 
 

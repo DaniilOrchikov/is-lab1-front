@@ -8,12 +8,13 @@ import {
     TableHead,
     TableRow,
     TablePagination,
-    TableSortLabel
+    TableSortLabel, MenuItem, Select
 } from "@mui/material";
 import {visuallyHidden} from '@mui/utils';
 import TextField from "@mui/material/TextField";
 
 type Order = 'asc' | 'desc';
+
 
 interface FilterComponentProps {
     value: any;

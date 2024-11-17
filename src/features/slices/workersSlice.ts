@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {PopupTypes, Worker} from '../../types';
-import {fetchWorkers, createWorker, updateWorkerById, deleteWorkerById} from '../api/api';
+import {fetchWorkers, createWorker, updateWorkerById, deleteWorkerById} from '../api';
 import store from "../../store";
 import {addPopup} from "./popupSlice";
 
@@ -22,7 +22,6 @@ export const updateWorkerThunk = createAsyncThunk(
     'workers/updateWorker',
     async (worker:Worker) => {
         await updateWorkerById(worker);
-        console.log(worker.coordinatesId)
         store.dispatch(fetchWorkersThunk());
         return worker;
     }

@@ -1,37 +1,27 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './App.css';
-import {RootState, useAppDispatch} from "./store";
+import {RootState} from "./store";
 import {useSelector} from "react-redux";
 import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
-import AuthorizationPage from "./features/components/AuthorizationPage";
-import {configureApiWithAuth} from "./features/api/api";
-import MainPage from "./features/components/MainPage";
-import QueriesPage from "./features/components/QueriesPage";
-
-
+import AuthorizationPage from "./features/components/pages/AuthorizationPage";
+import TablesPage from "./features/components/pages/TablesPage";
+import UpdateManagement from "./features/components/UpdateManagement";
+import AdminPage from "./features/components/pages/AdminPage";
 
 
 function App() {
-    const dispatch = useAppDispatch();
+    const user = useSelector((state: RootState) => state.user);
 
-    const user = useSelector((state:RootState) => state.user);
-
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<AuthorizationPage />} />
-                <Route path="/tables" element={user.authorized ? <MainPage /> : <Navigate to="/" />} />
-                <Route path="/queries" element={user.authorized ? <QueriesPage /> : <Navigate to="/" />} />
-
-                {/*<Route path="/admin" element={authState.role === 'admin' ? <Admin /> : <Navigate to="/register" />} />*/}
-                {/*<Route*/}
-                {/*    path="/logout"*/}
-                {/*    element={*/}
-                {/*        <button onClick={() => dispatch(logout())}>Logout</button>*/}
-                {/*    }*/}
-                {/*/>*/}
-            </Routes>
-        </Router>
+    return (<>
+            {user.authorized ? <UpdateManagement></UpdateManagement> : ""}
+            <Router>
+                <Routes>
+                    <Route path="/" element={<AuthorizationPage/>}/>
+                    <Route path="/tables" element={user.authorized ? <TablesPage/> : <Navigate to="/"/>}/>
+                    <Route path="/admin" element={user.authorized && user.admin ? <AdminPage/> : <Navigate to="/"/>}/>
+                </Routes>
+            </Router>
+        </>
     );
 }
 
