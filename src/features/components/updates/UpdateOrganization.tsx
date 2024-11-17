@@ -6,34 +6,37 @@ import {
     setOrganizationFormValueAnnualTurnover,
     setOrganizationFormValueEmployeesCount,
     setOrganizationFormValueFullName,
-    setOrganizationFormValueRating, setOrganizationFormValueType
+    setOrganizationFormValueRating,
+    setOrganizationFormValueType,
+    setOrganizationFormCreatorName,
+    setOrganizationFormCanUpdateObject
 } from "../../slices/formSlices/organizationFormSlice";
 import {forwardRef, useImperativeHandle} from "react";
 import {addPopup} from "../../slices/popupSlice";
 import {PopupTypes} from "../../../types";
 import {RootState, useAppDispatch} from "../../../store";
 import {useSelector} from "react-redux";
-import {setCoordinatesFormCanUpdateObject} from "../../slices/formSlices/coordinatesFormSlice";
 
 const UpdateOrganization= forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         handleClickOpen(id: number) {
             const organization = organizations.find(organization => organization.id === id)
             if (organization !== undefined) {
-                // dispatch(setOrganizationFormValueAddressId(organization.addressId));
                 dispatch(setOrganizationFormValueAnnualTurnover(organization.annualTurnover));
                 dispatch(setOrganizationFormValueEmployeesCount(organization.employeesCount));
                 dispatch(setOrganizationFormValueFullName(organization.fullName));
                 dispatch(setOrganizationFormValueRating(organization.rating));
                 dispatch(setOrganizationFormValueType(organization.type));
+                dispatch(setOrganizationFormValueAddressId(organization.addressId))
                 dispatch(setOrganizationFormType('update'));
                 dispatch(setCurrentOrganizationId(id));
                 dispatch(setOrganizationFormOpen(true));
+                dispatch(setOrganizationFormCreatorName(organization.creatorName));
                 if (organization.creatorName == user.name){
-                    dispatch(setCoordinatesFormCanUpdateObject(true))
+                    dispatch(setOrganizationFormCanUpdateObject(true))
                 }
                 else{
-                    dispatch(setCoordinatesFormCanUpdateObject(false))
+                    dispatch(setOrganizationFormCanUpdateObject(false))
                 }
             } else {
                 dispatch(addPopup({message: `There is no organization with id ${id}`, duration: 5000, type:PopupTypes.ERROR}))

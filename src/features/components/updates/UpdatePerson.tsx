@@ -4,7 +4,7 @@ import {
     setCurrentPersonId,
     setPersonFormValueEyeColor,
     setPersonFormValueHairColor,
-    setPersonFormValueHeight, setPersonFormValueNationality, setPersonFormCanUpdateObject
+    setPersonFormValueHeight, setPersonFormValueNationality, setPersonFormCanUpdateObject, setPersonFormCreatorName
 } from "../../slices/formSlices/personFormSlice";
 import {forwardRef, useImperativeHandle} from "react";
 import {addPopup} from "../../slices/popupSlice";
@@ -24,6 +24,7 @@ const UpdatePerson= forwardRef((props, ref) => {
                 dispatch(setPersonFormType('update'));
                 dispatch(setCurrentPersonId(id));
                 dispatch(setPersonFormOpen(true));
+                dispatch(setPersonFormCreatorName(person.creatorName))
                 if (person.creatorName == user.name){
                     dispatch(setPersonFormCanUpdateObject(true))
                 }

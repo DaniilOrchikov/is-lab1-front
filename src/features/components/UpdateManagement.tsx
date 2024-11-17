@@ -6,6 +6,7 @@ import {fetchCoordinatesThunk} from "../slices/coordinatesSlice";
 import {fetchOrganizationsThunk} from "../slices/organizationSlice";
 import {fetchWorkersThunk} from "../slices/workersSlice";
 import {fetchPersonsThunk} from "../slices/personSlice";
+import {fetchAddressesThunk} from "../slices/addressSlice";
 
 const UpdateManagement=()=>{
     const dispatch = useAppDispatch();
@@ -14,48 +15,18 @@ const UpdateManagement=()=>{
     useEffect(() => {
         configureApiWithAuth(user.name, user.password);
     }, [user]);
-
     useEffect(() => {
-        const fetchCoordinates = () => {
+        const fetch = () => {
+            dispatch(fetchAddressesThunk());
             dispatch(fetchCoordinatesThunk());
-        };
-
-        const intervalId = setInterval(fetchCoordinates, 1000);
-
-        fetchCoordinates();
-
-        return () => clearInterval(intervalId);
-    }, [dispatch]);
-    useEffect(() => {
-        const fetchOrganizations = () => {
             dispatch(fetchOrganizationsThunk());
-        };
-
-        const intervalId = setInterval(fetchOrganizations, 1000);
-
-        fetchOrganizations();
-
-        return () => clearInterval(intervalId);
-    }, [dispatch]);
-    useEffect(() => {
-        const fetchPersons = () => {
             dispatch(fetchPersonsThunk());
-        };
-
-        const intervalId = setInterval(fetchPersons, 1000);
-
-        fetchPersons();
-
-        return () => clearInterval(intervalId);
-    }, [dispatch]);
-    useEffect(() => {
-        const fetchWorkers = () => {
             dispatch(fetchWorkersThunk());
         };
 
-        const intervalId = setInterval(fetchWorkers, 1000);
+        const intervalId = setInterval(fetch, 1000);
 
-        fetchWorkers();
+        fetch();
 
         return () => clearInterval(intervalId);
     }, [dispatch]);

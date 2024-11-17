@@ -11,6 +11,8 @@ import CoordinatesForm from "../forms/CoordinatesForm";
 import OrganizationForm from "../forms/OrganizationForm";
 import PersonsTable from "../tables/PersonsTable";
 import PersonForm from "../forms/PersonForm";
+import AddressesTable from "../tables/AddressesTable";
+import AddressForm from "../forms/AddressForm";
 
 function a11yProps(index: number) {
     return {
@@ -34,6 +36,7 @@ const TablesPage =()=>{
                         <Tab label="Coordinates" {...a11yProps(1)} />
                         <Tab label="Organizations" {...a11yProps(2)} />
                         <Tab label="People" {...a11yProps(3)} />
+                        <Tab label="Addresses" {...a11yProps(4)} />
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={tabValue} index={0}>
@@ -64,10 +67,18 @@ const TablesPage =()=>{
                         </Paper>
                     </Box>
                 </CustomTabPanel>
+                <CustomTabPanel value={tabValue} index={4}>
+                    <Box sx={{display: 'flex', justifyContent: 'center', margin: '1%'}}>
+                        <Paper elevation={3} sx={{padding: '1%', width: 'max-content'}}>
+                            <AddressesTable></AddressesTable>
+                        </Paper>
+                    </Box>
+                </CustomTabPanel>
             </Box>
             <CoordinatesForm></CoordinatesForm>
             <OrganizationForm></OrganizationForm>
             <PersonForm></PersonForm>
+            <AddressForm></AddressForm>
         </Box>
     )
 }

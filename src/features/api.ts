@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {Coordinates, Organization, Person, Worker} from '../types';
+import {Address, Coordinates, Organization, Person, Worker} from '../types';
 import {Md5} from "ts-md5";
 import store from "../store";
 import {logout} from "./slices/userSlice";
@@ -45,7 +45,7 @@ export const fetchWorkers = async (): Promise<Worker[]> => {
 };
 
 
-export const createWorker = async (worker: Worker): Promise<number> => {
+export const createWorker = async (worker: Worker): Promise<{ id: number, creationDate: string }> => {
     const response = await api.post('/workers', worker);
     return response.data;
 };
@@ -117,4 +117,24 @@ export const updatePersonById = async (person: Person): Promise<void> => {
 
 export const deletePersonById = async (id: number): Promise<void> => {
     await api.delete(`/persons/${id}`);
+};
+
+// Address
+
+export const fetchAddresses = async (): Promise<Address[]> => {
+    const response = await api.get('/addresses');
+    return response.data;
+};
+
+export const createAddress = async (address: Address): Promise<number> => {
+    const response = await api.post('/addresses', address);
+    return response.data;
+};
+
+export const updateAddressById = async (address: Address): Promise<void> => {
+    await api.put(`/addresses/${address.id}`, address);
+};
+
+export const deleteAddressById = async (id: number): Promise<void> => {
+    await api.delete(`/addresses/${id}`);
 };

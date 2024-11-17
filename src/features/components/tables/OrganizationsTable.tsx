@@ -6,12 +6,13 @@ import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
 import OrganizationForm from "../forms/OrganizationForm";
 import {setOrganizationFormType, setOrganizationFormOpen} from "../../slices/formSlices/organizationFormSlice";
 import Button from "@mui/material/Button";
-import UpdateOrganization from "../forms/UpdateOrganization";
+import UpdateOrganization from "../updates/UpdateOrganization";
 import {MenuItem, Select} from "@mui/material";
 import CreateOrganizationButton from "../buttons/CreateOrganizationButton";
 
 const OrganizationsTable = () => {
     const organizations = useSelector((state: RootState) => state.organizations);
+    const addresses = useSelector((state: RootState) => state.addresses);
 
     const refUpdateForm = useRef<{ handleClickOpen: (id: number) => void } | null>(null);
 
@@ -20,46 +21,49 @@ const OrganizationsTable = () => {
             id: 'id', numeric: true, label: 'Id',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Id")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
             }
+        } as HeadCell<Organization>,
+        {
+            id: 'addressId', numeric: false, label: 'Address',
+            filterComponent: ({value, onChange}) => (
+                <Select
+                    variant="standard"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    sx={{width: 120}}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {addresses.map((address) => (
+                        <MenuItem key={address.id} value={address.id}>
+                            {`${address.street}, zipCode: ${address.zipCode}`}
+                        </MenuItem>
+                    ))}
+                </Select>
+            )
         } as HeadCell<Organization>,
         {
             id: 'annualTurnover', numeric: true, label: 'Aannual Turnover',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Aannual Turnover")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
             }
         } as HeadCell<Organization>,
         {
             id: 'employeesCount', numeric: true, label: 'Employees Count',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Employees Count")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
-            },
+            }
         } as HeadCell<Organization>,
         {
             id: 'fullName', numeric: false, label: 'Full Name',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Full Name")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
-            },
+            }
         } as HeadCell<Organization>,
         {
             id: 'rating', numeric: true, label: 'Rating',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Rating")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
-            },
+            }
         } as HeadCell<Organization>,
         {
             id: 'type', numeric: false, label: 'Type',
@@ -77,10 +81,7 @@ const OrganizationsTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            },
+            )
         } as HeadCell<Organization>,
     ];
 
@@ -95,8 +96,13 @@ const OrganizationsTable = () => {
     };
 
     const formatCellData = (columnId: keyof Organization, data: Organization[keyof Organization]) => {
+        if (columnId === 'addressId') {
+            const addr = addresses.find(address => address.id === data as number);
+            return addr ? `${addr.street}, zipCode: ${addr.zipCode}` : null;
+        }
         return data;
     };
+
 
     return (
         <>

@@ -3,24 +3,30 @@ import {PopupTypes, Worker} from '../../types';
 import {fetchWorkers, createWorker, updateWorkerById, deleteWorkerById} from '../api';
 import store from "../../store";
 import {addPopup} from "./popupSlice";
+import {format} from 'date-fns';
 
 export const fetchWorkersThunk = createAsyncThunk('workers/fetchWorkers', async () => {
-    return await fetchWorkers();
+    return (await fetchWorkers()).map((worker) => {
+        return {
+            ...worker,
+            creationDate: format(new Date(worker.creationDate), 'dd.MM.yyyy')
+        }
+    });
 });
 
 export const createWorkerThunk = createAsyncThunk(
     'workers/createWorker',
     async (worker: Worker) => {
-        const id = await createWorker(worker) as number;
+        const {id, creationDate} = await createWorker(worker);
         store.dispatch(fetchWorkersThunk());
-        store.dispatch(addPopup({message: `Worker successfully added`, duration: 5000, type:PopupTypes.SUCCESS}))
-        return {...worker, id: id}
+        store.dispatch(addPopup({message: `Worker successfully added`, duration: 5000, type: PopupTypes.SUCCESS}))
+        return {...worker, id: id, creationDate: format(new Date(creationDate), 'dd.MM.yyyy')}
     }
 );
 
 export const updateWorkerThunk = createAsyncThunk(
     'workers/updateWorker',
-    async (worker:Worker) => {
+    async (worker: Worker) => {
         await updateWorkerById(worker);
         store.dispatch(fetchWorkersThunk());
         return worker;

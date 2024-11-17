@@ -69,8 +69,9 @@ const CoordinatesForm = () => {
                     {coordinatesForm.type === 'update' ? "Update " : "Create "} Coordinates
                 </DialogTitle>
                 {!coordinatesForm.canUpdateObject ?
-                    <Typography sx={{marginLeft: "25px"}} variant="subtitle2">You cannot modify an object because you
-                        are not its creator.</Typography> : ""}
+                    <Typography sx={{marginLeft: "25px"}} variant="subtitle2">
+                        You cannot modify an object because you are not its creator.
+                    </Typography> : ""}
                 <DialogContent>
                     <form onSubmit={handleAddCoordinates}>
                         <Box>

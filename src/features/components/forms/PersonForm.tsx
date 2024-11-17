@@ -112,6 +112,7 @@ const PersonForm = () => {
                                     onChange={handleEyeColorChange}
                                     label="EyeColor"
                                     disabled={!personForm.canUpdateObject}
+                                    required
                                 >
                                     {Object.entries(Color).map(([key, value]) => (
                                         <MenuItem key={key} value={value}>
@@ -127,6 +128,7 @@ const PersonForm = () => {
                                     onChange={handleHairColorChange}
                                     label="HairColor"
                                     disabled={!personForm.canUpdateObject}
+                                    required
                                 >
                                     {Object.entries(Color).map(([key, value]) => (
                                         <MenuItem key={key} value={value}>
@@ -142,6 +144,7 @@ const PersonForm = () => {
                                     onChange={handleNationalityChange}
                                     label="Nationality"
                                     disabled={!personForm.canUpdateObject}
+                                    required
                                 >
                                     {Object.entries(Country).map(([key, value]) => (
                                         <MenuItem key={key} value={value}>

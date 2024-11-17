@@ -12,6 +12,9 @@ import organizationReducer from "./features/slices/organizationSlice";
 import personReducer from "./features/slices/personSlice";
 import organizationFormReducer from "./features/slices/formSlices/organizationFormSlice";
 import personFormReducer from "./features/slices/formSlices/personFormSlice";
+import addressReducer from './features/slices/addressSlice';
+import addressFormReducer from './features/slices/formSlices/addressFormSlice';
+
 
 const userPersistConfig = {
     key: 'user',
@@ -32,6 +35,8 @@ const store = configureStore({
         workerForm: workerFormReducer,
         personForm: personFormReducer,
         user: persistedUserReducer,
+        addresses: addressReducer,
+        addressForm: addressFormReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -146,7 +146,7 @@ const UniversalTable = <T extends { id: number }>({
             if (headCell.filterFunction) {
                 return headCell.filterFunction(row[columnId], filterValue);
             }
-            return String(row[columnId]).toLowerCase().includes(String(filterValue).toLowerCase());
+            return String(row[columnId]).toLowerCase() === String(filterValue).toLowerCase();
         });
     });
 
@@ -213,7 +213,7 @@ const UniversalTable = <T extends { id: number }>({
     );
 };
 
-export const standardFilterField = ({value, onChange}: FilterComponentProps, placeholder:string) => {
+export const standardFilterField = ({value, onChange}: FilterComponentProps, placeholder: string) => {
     return (
         <TextField
             variant="standard"

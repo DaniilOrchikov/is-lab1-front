@@ -1,21 +1,15 @@
-import {
-    setCoordinatesFormType,
-    setCoordinatesFormValueX,
-    setCoordinatesFormValueY,
-    setCoordinatesFormOpen, setCurrentCoordinatesId, setCoordinatesFormCanUpdateObject
-} from "../../slices/formSlices/coordinatesFormSlice";
 import {forwardRef, useImperativeHandle} from "react";
 import {addPopup} from "../../slices/popupSlice";
 import {PopupTypes} from "../../../types";
 import {RootState, useAppDispatch} from "../../../store";
 import {useSelector} from "react-redux";
 import {
-    setCurrentWorkerId, setWorkerFormCanUpdateObject, setWorkerFormOpen,
+    setCurrentWorkerId, setWorkerFormCanUpdateObject, setWorkerFormCreatorName, setWorkerFormOpen,
     setWorkerFormType,
-    setWorkerFormValueCoordinatesId,
-    setWorkerFormValueName, setWorkerFormValueOrganizationId, setWorkerFormValuePersonId,
+    setWorkerFormValueCoordinatesId, setWorkerFormValueCreationDate,
+    setWorkerFormValueName, setWorkerFormValueOrganizationId, setWorkerFormValuePersonId, setWorkerFormValuePosition,
     setWorkerFormValueRating,
-    setWorkerFormValueSalary, setWorkerFormValueStatus
+    setWorkerFormValueSalary, setWorkerFormValueStartDate, setWorkerFormValueStatus
 } from "../../slices/formSlices/workerFormSlice";
 
 const UpdateWorker= forwardRef((props, ref) => {
@@ -24,15 +18,19 @@ const UpdateWorker= forwardRef((props, ref) => {
             const worker = workers.find(worker => worker.id === id)
             if (worker !== undefined) {
                 dispatch(setWorkerFormValueName(worker.name));
+                dispatch(setWorkerFormValueCreationDate(worker.creationDate));
+                dispatch(setWorkerFormValueStartDate(worker.startDate));
                 dispatch(setWorkerFormValueSalary(worker.salary));
                 dispatch(setWorkerFormValueRating(worker.rating));
                 dispatch(setWorkerFormValueStatus(worker.status));
+                dispatch(setWorkerFormValuePosition(worker.position));
                 dispatch(setWorkerFormValueCoordinatesId(worker.coordinatesId));
                 dispatch(setWorkerFormValueOrganizationId(worker.organizationId));
                 dispatch(setWorkerFormValuePersonId(worker.personId));
                 dispatch(setWorkerFormType('update'));
                 dispatch(setCurrentWorkerId(id));
                 dispatch(setWorkerFormOpen(true));
+                dispatch(setWorkerFormCreatorName(worker.creatorName));
                 if (worker.creatorName == user.name){
                     dispatch(setWorkerFormCanUpdateObject(true))
                 }

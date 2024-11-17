@@ -3,10 +3,11 @@ export interface Worker {
     name: string;
     coordinatesId: number;
     organizationId: number;
+    creationDate: string
     salary: number;
     rating: number;
-    // startDate: Date;
-    // position: Position;
+    startDate: string;
+    position: Position;
     status: Status;
     personId: number;
     creatorName: string;
@@ -19,13 +20,14 @@ export interface Coordinates {
     y: number
     creatorName: string;
 }
-export function compareCoordinates(coordA: Coordinates, coordB:Coordinates): number {
+
+export function compareCoordinates(coordA: Coordinates, coordB: Coordinates): number {
     return coordA.x ** 2 + coordA.y ** 2 - coordB.x ** 2 - coordB.y ** 2;
 }
 
 export interface Organization {
     id: number
-    // addressId: number;
+    addressId: number;
     annualTurnover: number;
     employeesCount: number;
     fullName: string;
@@ -45,12 +47,14 @@ export interface Person {
 }
 
 export interface Address {
+    id: number
     street: string;
     zipCode: string;
     creatorName: string;
 }
 
 export interface Location {
+    id: number
     x: number;
     y: number;
     z: number;
@@ -59,10 +63,10 @@ export interface Location {
 }
 
 export enum Position {
-    DIRECTOR,
-    LEAD_DEVELOPER,
-    BAKER,
-    CLEANER
+    DIRECTOR = 'Director',
+    LEAD_DEVELOPER = 'Lead Developer',
+    BAKER = 'Baker',
+    CLEANER = "Cleaner"
 }
 
 export enum Status {
@@ -80,18 +84,18 @@ export enum OrganizationType {
 }
 
 export enum Color {
-    RED="Red",
-    BLACK="Black",
-    ORANGE="Orange",
-    BROWN="Brown"
+    RED = "Red",
+    BLACK = "Black",
+    ORANGE = "Orange",
+    BROWN = "Brown"
 }
 
 export enum Country {
-    GERMANY="Germany",
-    FRANCE="France",
-    CHINA="China",
-    INDIA="India",
-    JAPAN="Japan"
+    GERMANY = "Germany",
+    FRANCE = "France",
+    CHINA = "China",
+    INDIA = "India",
+    JAPAN = "Japan"
 }
 
 export enum PopupTypes {

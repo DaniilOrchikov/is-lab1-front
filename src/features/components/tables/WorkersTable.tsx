@@ -1,18 +1,23 @@
 import {useSelector} from "react-redux";
-import {RootState, useAppDispatch} from "../../../store";
+import {RootState} from "../../../store";
 import React, {useRef} from "react";
-import {Color, compareCoordinates, Status, Worker} from "../../../types";
+import {compareCoordinates, Position, Status, Worker} from "../../../types";
 import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
-import Button from "@mui/material/Button";
-import {
-    setWorkerFormCanUpdateObject,
-    setWorkerFormOpen,
-    setWorkerFormType
-} from "../../slices/formSlices/workerFormSlice";
 import WorkerForm from "../forms/WorkerForm";
-import UpdateWorker from "../forms/UpdateWorker"
+import UpdateWorker from "../updates/UpdateWorker"
 import {MenuItem, Select} from "@mui/material";
 import CreateWorkerButton from "../buttons/CreateWorkerButton";
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {compareAsc, format} from "date-fns";
+
+
+function parseDate(dateString: string): Date {
+    const [day, month, year] = dateString.split('.').map(part => parseInt(part, 10));
+    return new Date(year, month - 1, day);
+}
+
 
 const WorkersTable = () => {
     const workers = useSelector((state: RootState) => state.workers);
@@ -29,10 +34,7 @@ const WorkersTable = () => {
             label: 'Id',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Id")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
-            },
+            }
         } as HeadCell<Worker>,
         {
             id: 'name',
@@ -40,10 +42,7 @@ const WorkersTable = () => {
             label: 'Name',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Name")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).toLowerCase().includes(String(filterValue).toLowerCase());
-            },
+            }
         } as HeadCell<Worker>,
         {
             id: 'salary',
@@ -51,9 +50,29 @@ const WorkersTable = () => {
             label: 'Salary',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Salary")
-            },
+            }
+        } as HeadCell<Worker>,
+        {
+            id: 'creationDate',
+            numeric: false,
+            label: 'Creation Date',
+            filterComponent: ({value, onChange}) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        value={null}
+                        onChange={(newValue) => {
+                            onChange(newValue !== null ? newValue.toDate() : null);
+                        }}
+                        sx={{width: "170px"}}
+                    />
+                </LocalizationProvider>
+
+            ),
             filterFunction: (cellValue, filterValue) => {
-                return Number(cellValue) >= Number(filterValue);
+                if (isNaN(filterValue)) {
+                    return true
+                }
+                return cellValue === format(filterValue, "dd.MM.yyyy");
             },
         } as HeadCell<Worker>,
         {
@@ -74,10 +93,27 @@ const WorkersTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            },
+            )
+        } as HeadCell<Worker>,
+        {
+            id: 'position',
+            numeric: false,
+            label: 'Position',
+            filterComponent: ({value, onChange}) => (
+                <Select
+                    variant="standard"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    sx={{width: 120}}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {Object.entries(Position).map(([key, value]) => (
+                        <MenuItem key={key} value={value}>
+                            {value}
+                        </MenuItem>
+                    ))}
+                </Select>
+            )
         } as HeadCell<Worker>,
         {
             id: 'coordinatesId',
@@ -97,10 +133,7 @@ const WorkersTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            },
+            )
         } as HeadCell<Worker>,
         {
             id: 'organizationId',
@@ -120,10 +153,7 @@ const WorkersTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            },
+            )
         } as HeadCell<Worker>,
         {
             id: 'personId',
@@ -143,9 +173,29 @@ const WorkersTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
+            )
+        } as HeadCell<Worker>,
+        {
+            id: 'startDate',
+            numeric: false,
+            label: 'Start Date',
+            filterComponent: ({value, onChange}) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        value={null}
+                        onChange={(newValue) => {
+                            onChange(newValue !== null ? newValue.toDate() : null);
+                        }}
+                        sx={{width: "170px"}}
+                    />
+                </LocalizationProvider>
+
             ),
             filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
+                if (isNaN(filterValue)) {
+                    return true
+                }
+                return cellValue === format(filterValue, "dd.MM.yyyy");
             },
         } as HeadCell<Worker>
     ];
@@ -158,6 +208,18 @@ const WorkersTable = () => {
                 return compareCoordinates(coordA, coordB);
             }
             return 0;
+        }
+        if (orderBy === 'creationDate') {
+            const date1 = parseDate(a.creationDate);
+            const date2 = parseDate(b.creationDate);
+            const comparisonResult = compareAsc(date1, date2);
+            if (comparisonResult > 0) {
+                return 1
+            } else if (comparisonResult < 0) {
+                return -1
+            } else {
+                return 0
+            }
         }
         if (b[orderBy] < a[orderBy]) {
             return -1;

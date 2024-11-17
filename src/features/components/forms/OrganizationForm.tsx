@@ -20,6 +20,7 @@ import {
 } from "../../slices/formSlices/organizationFormSlice";
 import FormControl from "@mui/material/FormControl";
 import {addPopup} from "../../slices/popupSlice";
+import CreateAddressButton from "../buttons/CreateAddressButton";
 
 
 const OrganizationForm = () => {
@@ -28,6 +29,7 @@ const OrganizationForm = () => {
     const [addressId, setAddressId] = useState("");
     const [type, setType] = useState(OrganizationType.COMMERCIAL);
     const organizations = useSelector((state: RootState) => state.organizations);
+    const addresses = useSelector((state: RootState) => state.addresses);
     const [nameErrorMessage, setNameErrorMessage] = useState("")
     const user = useSelector((state: RootState) => state.user);
 
@@ -44,6 +46,7 @@ const OrganizationForm = () => {
     const handleClose = () => {
         dispatch(setOrganizationFormOpen(false));
         dispatch(resetOrganizationForm())
+        setAddressId("")
     };
 
     const handleAddOrganization = (event: React.FormEvent<HTMLFormElement>) => {
@@ -114,93 +117,96 @@ const OrganizationForm = () => {
                     {organizationForm.type === 'update' ? "Update " : "Create "} Organization
                 </DialogTitle>
                 {!organizationForm.canUpdateObject ?
-                    <Typography sx={{marginLeft: "25px"}} variant="subtitle2">You cannot modify an object because you
-                        are not
-                        its creator.</Typography> : ""}
+                    <Typography sx={{marginLeft: "25px"}} variant="subtitle2">
+                        You cannot modify an object because you are not its creator.
+                    </Typography> : ""}
                 <DialogContent>
                     <form onSubmit={handleAddOrganization}>
                         <Box>
-                            <Box>
-                                <TextField name="fullName" label="Full Name" variant="standard"
-                                           onChange={() => {
-                                               setNameErrorMessage("")
-                                           }}
-                                           required
-                                           defaultValue={organizationForm.valueFullName !== null ? organizationForm.valueFullName : ''}
-                                           disabled={!organizationForm.canUpdateObject}/>
-                            </Box>
-                            <Typography sx={{color: "red"}} variant="caption">{nameErrorMessage}</Typography>
-                            <Box>
+                            <TextField name="fullName" label="Full Name" variant="standard"
+                                       onChange={() => {
+                                           setNameErrorMessage("")
+                                       }}
+                                       required
+                                       defaultValue={organizationForm.valueFullName !== null ? organizationForm.valueFullName : ''}
+                                       disabled={!organizationForm.canUpdateObject}/>
+                        </Box>
+                        <Typography sx={{color: "red", height: "1em"}} variant="caption">{nameErrorMessage}</Typography>
+                        <Box>
 
-                                <TextField name="rating" label="Rating" variant="standard"
-                                           sx={{marginTop: "5%"}}
-                                           type={'number'}
-                                           defaultValue={organizationForm.valueRating !== null ? organizationForm.valueRating : ''}
-                                           required
-                                           InputProps={{inputProps: {min: 1}}}
-                                           disabled={!organizationForm.canUpdateObject}/>
-                            </Box>
-                            <Box>
+                            <TextField name="rating" label="Rating" variant="standard"
+                                       sx={{marginTop: "5%"}}
+                                       type={'number'}
+                                       defaultValue={organizationForm.valueRating !== null ? organizationForm.valueRating : ''}
+                                       required
+                                       InputProps={{inputProps: {min: 1}}}
+                                       disabled={!organizationForm.canUpdateObject}/>
+                        </Box>
+                        <Box>
 
-                                <TextField name="annualTurnover" label="Annual Turnover" variant="standard"
-                                           sx={{marginTop: "5%"}}
-                                           type={'number'}
-                                           required
-                                           defaultValue={organizationForm.valueAnnualTurnover !== null ? organizationForm.valueAnnualTurnover : ''}
-                                           InputProps={{inputProps: {min: 1}}}
-                                           disabled={!organizationForm.canUpdateObject}/>
-                            </Box>
-                            <Box>
+                            <TextField name="annualTurnover" label="Annual Turnover" variant="standard"
+                                       sx={{marginTop: "5%"}}
+                                       type={'number'}
+                                       required
+                                       defaultValue={organizationForm.valueAnnualTurnover !== null ? organizationForm.valueAnnualTurnover : ''}
+                                       InputProps={{inputProps: {min: 1}}}
+                                       disabled={!organizationForm.canUpdateObject}/>
+                        </Box>
+                        <Box>
 
-                                <TextField name="employeesCount" label="Employees Count" variant="standard"
-                                           sx={{marginTop: "5%"}}
-                                           type={'number'}
-                                           required
-                                           defaultValue={organizationForm.valueEmployeesCount !== null ? organizationForm.valueEmployeesCount : ''}
-                                           InputProps={{inputProps: {min: 1}}}
-                                           disabled={!organizationForm.canUpdateObject}/>
-                            </Box>
+                            <TextField name="employeesCount" label="Employees Count" variant="standard"
+                                       sx={{marginTop: "5%"}}
+                                       type={'number'}
+                                       required
+                                       defaultValue={organizationForm.valueEmployeesCount !== null ? organizationForm.valueEmployeesCount : ''}
+                                       InputProps={{inputProps: {min: 1}}}
+                                       disabled={!organizationForm.canUpdateObject}/>
+                        </Box>
 
-                            <FormControl variant="outlined" fullWidth sx={{width: 300, marginTop: "8%"}}>
-                                <InputLabel>Type</InputLabel>
+                        <FormControl variant="outlined" fullWidth sx={{width: 300, marginTop: "8%"}}>
+                            <InputLabel>Type</InputLabel>
+                            <Select
+                                id="type-select"
+                                value={type}
+                                onChange={handleTypeChange}
+                                label="Status"
+                                required
+                                disabled={!organizationForm.canUpdateObject}
+                            >
+                                {Object.entries(OrganizationType).map(([key, value]) => (
+                                    <MenuItem key={key} value={value}>
+                                        {value}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <br></br>
+                        <br></br>
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: "100%",
+                            flexDirection: "column",
+                        }}>
+                            {organizationForm.canUpdateObject ? <CreateAddressButton/> : ""}
+                            <FormControl sx={{minWidth: "40%", marginTop: "2%"}}>
+                                <InputLabel>Address</InputLabel>
                                 <Select
-                                    id="type-select"
-                                    value={type}
-                                    onChange={handleTypeChange}
-                                    label="Status"
+                                    id="select-address"
+                                    label="Address"
+                                    onChange={handleAddressChange}
+                                    required
+                                    value={addressId}
                                     disabled={!organizationForm.canUpdateObject}
                                 >
-                                    {Object.entries(OrganizationType).map(([key, value]) => (
-                                        <MenuItem key={key} value={value}>
-                                            {value}
-                                        </MenuItem>
-                                    ))}
+                                    {addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId).map((address) =>
+                                        <MenuItem key={address.id}
+                                                  value={address.id}>({address.street},
+                                            zipCode: {address.zipCode})</MenuItem>)
+                                    }
                                 </Select>
                             </FormControl>
-                            {/*<Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>*/}
-                            {/*    <Button variant="contained" onClick={() => {*/}
-                            {/*        dispatch(setAddressFormOpen(true))*/}
-                            {/*        dispatch(setAddressFormType('create'))*/}
-                            {/*    }}>*/}
-                            {/*        Create Address*/}
-                            {/*    </Button>*/}
-                            {/*    <FormControl>*/}
-                            {/*        <InputLabel>Address</InputLabel>*/}
-                            {/*        <Select*/}
-                            {/*            id="select-address"*/}
-                            {/*            label="Address"*/}
-                            {/*            onChange={handleAddressChange}*/}
-                            {/*            required*/}
-                            {/*            value={addressId}*/}
-                            {/*            sx={{width: 150}}*/}
-                            {/*        >*/}
-                            {/*            {addressList.map((address) =>*/}
-                            {/*                <MenuItem key={address.id}*/}
-                            {/*                          value={address.id}>({address.x}; {address.y})</MenuItem>)*/}
-                            {/*            }*/}
-                            {/*        </Select>*/}
-                            {/*    </FormControl>*/}
-                            {/*</Box>*/}
                         </Box>
                         <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
                             {organizationForm.type === 'update' && organizationForm.canUpdateObject ?

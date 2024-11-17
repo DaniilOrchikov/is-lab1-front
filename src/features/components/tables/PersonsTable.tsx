@@ -6,7 +6,7 @@ import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
 import PersonForm from "../forms/PersonForm";
 import {setPersonFormType, setPersonFormOpen} from "../../slices/formSlices/personFormSlice";
 import Button from "@mui/material/Button";
-import UpdatePerson from "../forms/UpdatePerson";
+import UpdatePerson from "../updates/UpdatePerson";
 import {MenuItem, Select} from "@mui/material";
 import CreatePersonButton from "../buttons/CreatePersonButton";
 
@@ -20,9 +20,6 @@ const PersonTable = () => {
             id: 'id', numeric: true, label: 'Id',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Id")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return String(cellValue).includes(filterValue);
             }
         } as HeadCell<Person>,
         {
@@ -41,10 +38,7 @@ const PersonTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            }
+            )
         } as HeadCell<Person>,
         {
             id: 'hairColor', numeric: false, label: 'HairColor',
@@ -62,10 +56,7 @@ const PersonTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            }
+            )
         } as HeadCell<Person>,
         {
             id: 'height',
@@ -73,10 +64,7 @@ const PersonTable = () => {
             label: 'Height',
             filterComponent: ({value, onChange}) => {
                 return standardFilterField({value, onChange}, "Filter Height")
-            },
-            filterFunction: (cellValue, filterValue) => {
-                return Number(cellValue) >= Number(filterValue);
-            },
+            }
         } as HeadCell<Person>,
         {
             id: 'nationality', numeric: false, label: 'Nationality',
@@ -94,10 +82,7 @@ const PersonTable = () => {
                         </MenuItem>
                     ))}
                 </Select>
-            ),
-            filterFunction: (cellValue, filterValue) => {
-                return cellValue === filterValue;
-            }
+            )
         } as HeadCell<Person>,
     ];
 
