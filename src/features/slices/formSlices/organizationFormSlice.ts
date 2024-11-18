@@ -7,11 +7,11 @@ const organizationFormSlice = createSlice({
         open: false,
         valueAnnualTurnover: null,
         valueEmployeesCount: null,
-        valueFullName: null,
+        valueFullName: "",
         valueRating: null,
-        valueType: null,
+        valueType: "",
         valueAddressId: null,
-        creatorName: null,
+        creatorName: "",
         type: 'create',
         currentOrganizationId: -1,
         canUpdateObject: false
@@ -19,11 +19,11 @@ const organizationFormSlice = createSlice({
         open: boolean,
         valueAnnualTurnover: number | null,
         valueEmployeesCount: number | null,
-        valueFullName: string | null,
+        valueFullName: string,
         valueRating: number | null,
-        valueType: OrganizationType | null
+        valueType: OrganizationType | string
         valueAddressId: number | null,
-        creatorName: string | null,
+        creatorName: string,
         type: 'update' | 'create',
         currentOrganizationId: number
         canUpdateObject: boolean
@@ -38,10 +38,10 @@ const organizationFormSlice = createSlice({
         setOrganizationFormValueEmployeesCount: (state, action: PayloadAction<number | null>) => {
             state.valueEmployeesCount = action.payload;
         },
-        setOrganizationFormValueFullName: (state, action: PayloadAction<string | null>) => {
+        setOrganizationFormValueFullName: (state, action: PayloadAction<string>) => {
             state.valueFullName = action.payload;
         },
-        setOrganizationFormValueType: (state, action: PayloadAction<OrganizationType | null>) => {
+        setOrganizationFormValueType: (state, action: PayloadAction<OrganizationType | string>) => {
             state.valueType = action.payload;
         },
         setOrganizationFormValueRating: (state, action: PayloadAction<number | null>) => {
@@ -53,7 +53,7 @@ const organizationFormSlice = createSlice({
         setCurrentOrganizationId: (state, action: PayloadAction<number>) => {
             state.currentOrganizationId = action.payload;
         },
-        setOrganizationFormCreatorName: (state, action: PayloadAction<string | null>) => {
+        setOrganizationFormCreatorName: (state, action: PayloadAction<string>) => {
             state.creatorName = action.payload
         },
         setOrganizationFormCanUpdateObject: (state, action: PayloadAction<boolean>) => {
@@ -67,11 +67,11 @@ const organizationFormSlice = createSlice({
                 open: state.open,
                 valueAnnualTurnover: null,
                 valueEmployeesCount: null,
-                valueFullName: null,
+                valueFullName: "",
                 valueRating: null,
-                valueType: null,
+                valueType: "",
                 valueAddressId: null,
-                creatorName: null,
+                creatorName: "",
                 type: state.type,
                 currentOrganizationId: -1,
                 canUpdateObject: state.canUpdateObject

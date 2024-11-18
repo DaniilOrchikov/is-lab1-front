@@ -6,22 +6,22 @@ const personFormSlice = createSlice({
     name: 'personForm',
     initialState: {
         open: false,
-        valueEyeColor: null,
-        valueHairColor: null,
+        valueEyeColor: "",
+        valueHairColor: "",
         valueLocationId: null,
         valueHeight: null,
-        valueNationality: null,
+        valueNationality: "",
         type: 'create',
         currentPersonId: -1,
         creatorName: null,
         canUpdateObject: false
     } as {
         open: boolean,
-        valueEyeColor: null | Color,
-        valueHairColor: null | Color,
+        valueEyeColor: string | Color,
+        valueHairColor: string | Color,
         valueLocationId: null | number,
         valueHeight: null | number,
-        valueNationality: null | Country,
+        valueNationality: string | Country,
         type: 'update' | 'create',
         currentPersonId: number,
         creatorName: string | null,
@@ -31,10 +31,10 @@ const personFormSlice = createSlice({
         setPersonFormOpen: (state, action: PayloadAction<boolean>) => {
             state.open = action.payload
         },
-        setPersonFormValueEyeColor: (state, action: PayloadAction<Color | null>) => {
+        setPersonFormValueEyeColor: (state, action: PayloadAction<Color | string>) => {
             state.valueEyeColor = action.payload
         },
-        setPersonFormValueHairColor: (state, action: PayloadAction<Color | null>) => {
+        setPersonFormValueHairColor: (state, action: PayloadAction<Color | string>) => {
             state.valueHairColor = action.payload
         },
         setPersonFormValueLocationId: (state, action: PayloadAction<number | null>) => {
@@ -43,7 +43,7 @@ const personFormSlice = createSlice({
         setPersonFormValueHeight: (state, action: PayloadAction<number | null>) => {
             state.valueHeight = action.payload
         },
-        setPersonFormValueNationality: (state, action: PayloadAction<Country | null>) => {
+        setPersonFormValueNationality: (state, action: PayloadAction<Country | string>) => {
             state.valueNationality = action.payload
         },
         setPersonFormType: (state, action: PayloadAction<'update' | 'create'>) => {
@@ -61,11 +61,11 @@ const personFormSlice = createSlice({
         resetPersonForm: (state) => {
             return {
                 open: state.open,
-                valueEyeColor: null,
-                valueHairColor: null,
+                valueEyeColor: "",
+                valueHairColor: "",
                 valueLocationId: null,
                 valueHeight: null,
-                valueNationality: null,
+                valueNationality: "",
                 type: state.type,
                 currentPersonId: -1,
                 creatorName: null,

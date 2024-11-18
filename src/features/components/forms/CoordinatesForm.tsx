@@ -1,23 +1,20 @@
-import React from 'react'
-import {RootState, useAppDispatch} from "../../../store";
+import React from 'react';
+import {useSelector} from 'react-redux';
+import {Box, Dialog, DialogContent, DialogTitle, Typography, TextField, Button} from '@mui/material';
+import {useAppDispatch} from '../../../store';
+import {RootState} from '../../../store';
 import {Coordinates} from '../../../types';
-import Button from '@mui/material/Button';
-import {
-    Box,
-    Dialog,
-    DialogContent,
-    DialogTitle, Typography,
-} from "@mui/material";
-import TextField from "@mui/material/TextField";
 import {
     createCoordinatesThunk,
     deleteCoordinatesByIdThunk,
     updateCoordinatesThunk
-} from "../../slices/coordinatesSlice";
-import {useSelector} from "react-redux";
+} from '../../slices/coordinatesSlice';
 import {
-    setCoordinatesFormOpen, resetCoordinatesForm
-} from "../../slices/formSlices/coordinatesFormSlice";
+    setCoordinatesFormOpen,
+    resetCoordinatesForm,
+    setCoordinatesFormValueY,
+    setCoordinatesFormValueX
+} from '../../slices/formSlices/coordinatesFormSlice';
 
 
 const CoordinatesForm = () => {
@@ -33,13 +30,10 @@ const CoordinatesForm = () => {
     const handleAddCoordinates = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
-        const x = parseInt(formData.get("x") as string);
-        const y = parseInt(formData.get("y") as string);
         let coordinates: Coordinates = {
             id: coordinatesForm.currentCoordinatesId,
-            x: x,
-            y: y,
+            x: coordinatesForm.valueX,
+            y: coordinatesForm.valueY,
             creatorName: user.name
         } as Coordinates;
         if (coordinatesForm.type === 'update') {
@@ -77,13 +71,31 @@ const CoordinatesForm = () => {
                         <Box>
                             <TextField name="x" label="X" variant="standard"
                                        type={'number'}
-                                       defaultValue={coordinatesForm.valueX !== null ? coordinatesForm.valueX : ''}
+                                       onChange={(event) => {
+                                           const value = parseInt(event.target.value, 10);
+                                           if (!isNaN(value)) {
+                                               dispatch(setCoordinatesFormValueX(parseInt(event.target.value)))
+                                           }
+                                           else {
+                                               dispatch(setCoordinatesFormValueX(null))
+                                           }
+                                       }}
+                                       defaultValue={coordinatesForm.valueX}
                                        required
                                        disabled={!coordinatesForm.canUpdateObject}/>
                             <TextField name="y" label="Y" variant="standard"
                                        type={'number'}
                                        required
-                                       defaultValue={coordinatesForm.valueY !== null ? coordinatesForm.valueY : ''}
+                                       onChange={(event) => {
+                                           const value = parseInt(event.target.value, 10);
+                                           if (!isNaN(value)) {
+                                               dispatch(setCoordinatesFormValueY(parseInt(event.target.value)))
+                                           }
+                                           else {
+                                               dispatch(setCoordinatesFormValueY(null))
+                                           }
+                                       }}
+                                       defaultValue={coordinatesForm.valueY}
                                        InputProps={{inputProps: {max: 916}}}
                                        disabled={!coordinatesForm.canUpdateObject}/>
                         </Box>

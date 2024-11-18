@@ -6,15 +6,16 @@ import {
     setWorkerFormOpen,
     setWorkerFormType
 } from "../../slices/formSlices/workerFormSlice";
+import CreateButtonProps from "./CreateButtonProps";
 
-const CreateWorkerButton = () => {
+const CreateWorkerButton = (props:CreateButtonProps) => {
     const dispatch = useAppDispatch();
     return (
         <Button variant="contained" onClick={() => {
             dispatch(setWorkerFormOpen(true))
             dispatch(setWorkerFormType('create'))
             dispatch(setWorkerFormCanUpdateObject(true))
-        }}> Create Worker </Button>)
+        }} sx={props.sx}> Create Worker </Button>)
 }
 
 export default CreateWorkerButton

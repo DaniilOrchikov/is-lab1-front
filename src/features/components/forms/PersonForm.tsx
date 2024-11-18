@@ -1,43 +1,32 @@
-import React, {useEffect, useState} from 'react'
-import {RootState, useAppDispatch} from "../../../store";
-import {Color, Country, Person, Status} from '../../../types';
-import Button from '@mui/material/Button';
+import React from 'react';
+import {useSelector} from 'react-redux';
 import {
     Box,
     Dialog,
     DialogContent,
-    DialogTitle, InputLabel, MenuItem, Select, SelectChangeEvent, Typography,
-} from "@mui/material";
-import TextField from "@mui/material/TextField";
+    DialogTitle,
+    Typography,
+    TextField,
+    Button,
+} from '@mui/material';
+import {useAppDispatch} from '../../../store';
+import {RootState} from '../../../store';
+import {Color, Country, Person} from '../../../types';
+import {createPersonThunk, deletePersonByIdThunk, updatePersonThunk} from '../../slices/personSlice';
 import {
-    createPersonThunk,
-    deletePersonByIdThunk,
-    updatePersonThunk
-} from "../../slices/personSlice";
-import {useSelector} from "react-redux";
-import {
-    setPersonFormOpen, resetPersonForm
-} from "../../slices/formSlices/personFormSlice";
-import FormControl from "@mui/material/FormControl";
+    setPersonFormOpen,
+    resetPersonForm,
+    setPersonFormValueEyeColor,
+    setPersonFormValueNationality, setPersonFormValueHeight, setPersonFormValueHairColor
+} from '../../slices/formSlices/personFormSlice';
+import SelectField from "./SelectField";
 
 
 const PersonForm = () => {
     const personForm = useSelector((state: RootState) => state.personForm);
     const dispatch = useAppDispatch();
-    const [eyeColor, setEyeColor] = useState<Color>(Color.BLACK);
-    const [hairColor, setHairColor] = useState<Color>(Color.BLACK);
-    const [nationality, setNationality] = useState<Country>(Country.CHINA);
     const user = useSelector((state: RootState) => state.user);
 
-    const handleEyeColorChange = (event: SelectChangeEvent) => {
-        setEyeColor(event.target.value as Color);
-    };
-    const handleHairColorChange = (event: SelectChangeEvent) => {
-        setHairColor(event.target.value as Color);
-    };
-    const handleNationalityChange = (event: SelectChangeEvent) => {
-        setNationality(event.target.value as Country);
-    };
 
     const handleClose = () => {
         dispatch(setPersonFormOpen(false));
@@ -47,14 +36,12 @@ const PersonForm = () => {
     const handleAddPerson = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
-        const height = parseInt(formData.get("height") as string);
         let person: Person = {
             id: personForm.currentPersonId,
-            eyeColor: eyeColor,
-            hairColor: hairColor,
-            height: height,
-            nationality: nationality,
+            eyeColor: personForm.valueEyeColor,
+            hairColor: personForm.valueHairColor,
+            height: personForm.valueHeight,
+            nationality: personForm.valueNationality,
             creatorName: user.name
         } as Person;
         if (personForm.type === 'update') {
@@ -71,22 +58,6 @@ const PersonForm = () => {
         dispatch(resetPersonForm())
         handleClose()
     }
-
-    useEffect(() => {
-        if (personForm.valueEyeColor !== null) {
-            setEyeColor(personForm.valueEyeColor);
-        }
-    }, [personForm.valueEyeColor]);
-    useEffect(() => {
-        if (personForm.valueHairColor !== null) {
-            setEyeColor(personForm.valueHairColor);
-        }
-    }, [personForm.valueHairColor]);
-    useEffect(() => {
-        if (personForm.valueNationality !== null) {
-            setNationality(personForm.valueNationality);
-        }
-    }, [personForm.valueNationality]);
 
     return (
         <Box>
@@ -105,59 +76,40 @@ const PersonForm = () => {
                 <DialogContent>
                     <form onSubmit={handleAddPerson}>
                         <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
-                            <FormControl variant="outlined" fullWidth sx={{width: 150, marginTop: "3%"}}>
-                                <InputLabel>Eye Color</InputLabel>
-                                <Select
-                                    value={eyeColor}
-                                    onChange={handleEyeColorChange}
-                                    label="EyeColor"
-                                    disabled={!personForm.canUpdateObject}
-                                    required
-                                >
-                                    {Object.entries(Color).map(([key, value]) => (
-                                        <MenuItem key={key} value={value}>
-                                            {value}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl variant="outlined" fullWidth sx={{width: 150, marginTop: "3%"}}>
-                                <InputLabel>Hair Color</InputLabel>
-                                <Select
-                                    value={hairColor}
-                                    onChange={handleHairColorChange}
-                                    label="HairColor"
-                                    disabled={!personForm.canUpdateObject}
-                                    required
-                                >
-                                    {Object.entries(Color).map(([key, value]) => (
-                                        <MenuItem key={key} value={value}>
-                                            {value}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl variant="outlined" fullWidth sx={{width: 150, marginTop: "3%"}}>
-                                <InputLabel>Nationality</InputLabel>
-                                <Select
-                                    value={nationality}
-                                    onChange={handleNationalityChange}
-                                    label="Nationality"
-                                    disabled={!personForm.canUpdateObject}
-                                    required
-                                >
-                                    {Object.entries(Country).map(([key, value]) => (
-                                        <MenuItem key={key} value={value}>
-                                            {value}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <SelectField label="Eye Color"
+                                         value={personForm.valueEyeColor}
+                                         changeHandler={(event) => dispatch(setPersonFormValueEyeColor(event.target.value as Color))}
+                                         options={Object.values(Color).map(color => ({label: color, value: color}))}
+                                         disabled={!personForm.canUpdateObject}
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+
+                            <SelectField label="Hair Color"
+                                         value={personForm.valueHairColor}
+                                         changeHandler={(event) => dispatch(setPersonFormValueHairColor(event.target.value as Color))}
+                                         options={Object.values(Color).map(color => ({label: color, value: color}))}
+                                         disabled={!personForm.canUpdateObject}
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+
+                            <SelectField label="Nationality"
+                                         value={personForm.valueNationality}
+                                         changeHandler={(event) => dispatch(setPersonFormValueNationality(event.target.value as Country))}
+                                         options={Object.values(Country).map(country => ({label: country, value: country}))}
+                                         disabled={!personForm.canUpdateObject}
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
                         </Box>
-                        <Box>
+                        <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
                             <TextField name="height" label="Height" variant="standard"
                                        type={'number'}
-                                       defaultValue={personForm.valueHeight !== null ? personForm.valueHeight : ''}
+                                       defaultValue={personForm.valueHeight}
+                                       onChange={(event) => {
+                                           const value = parseInt(event.target.value, 10);
+                                           if (!isNaN(value)) {
+                                               dispatch(setPersonFormValueHeight(parseInt(event.target.value)))
+                                           }
+                                           else {
+                                               dispatch(setPersonFormValueHeight(null))
+                                           }
+                                       }}
                                        required
                                        InputProps={{inputProps: {min: 1}}}
                                        disabled={!personForm.canUpdateObject}/>

@@ -4,8 +4,6 @@ import React, {useRef} from "react";
 import {Color, Country, Person} from "../../../types";
 import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
 import PersonForm from "../forms/PersonForm";
-import {setPersonFormType, setPersonFormOpen} from "../../slices/formSlices/personFormSlice";
-import Button from "@mui/material/Button";
 import UpdatePerson from "../updates/UpdatePerson";
 import {MenuItem, Select} from "@mui/material";
 import CreatePersonButton from "../buttons/CreatePersonButton";

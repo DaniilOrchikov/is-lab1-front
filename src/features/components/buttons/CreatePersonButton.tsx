@@ -6,15 +6,16 @@ import {
     setPersonFormOpen,
     setPersonFormType
 } from "../../slices/formSlices/personFormSlice";
+import CreateButtonProps from "./CreateButtonProps";
 
-const CreatePersonButton = () => {
+const CreatePersonButton = (props:CreateButtonProps) => {
     const dispatch = useAppDispatch();
     return (
-        <Button variant="contained" sx={{width: "40%"}} onClick={() => {
+        <Button variant="contained" onClick={() => {
             dispatch(setPersonFormOpen(true))
             dispatch(setPersonFormType('create'))
             dispatch(setPersonFormCanUpdateObject(true))
-        }}>Create Person</Button>)
+        }} sx={props.sx}>Create Person</Button>)
 }
 
 export default CreatePersonButton

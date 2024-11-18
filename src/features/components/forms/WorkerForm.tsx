@@ -1,26 +1,31 @@
-import React, {useEffect, useState} from 'react'
-import store, {RootState, useAppDispatch} from "../../../store";
+import React, {useState} from 'react'
+import {RootState, useAppDispatch} from "../../../store";
 import {
     createWorkerThunk, deleteWorkerByIdThunk, updateWorkerThunk
 } from '../../slices/workersSlice';
-import {PopupTypes, Position, Status, Worker} from '../../../types';
+import {Position, Status, Worker} from '../../../types';
 import Button from '@mui/material/Button';
 import {
     Box,
     Dialog,
     DialogContent,
     DialogTitle,
-    InputLabel, MenuItem,
-    Select,
-    SelectChangeEvent, Typography
+    Typography
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import FormControl from '@mui/material/FormControl';
 import {useSelector} from "react-redux";
-import {setCoordinatesFormOpen, setCoordinatesFormType} from "../../slices/formSlices/coordinatesFormSlice";
-import {resetWorkerForm, setWorkerFormOpen, setWorkerFormValueStartDate} from "../../slices/formSlices/workerFormSlice";
-import {setOrganizationFormOpen, setOrganizationFormType} from "../../slices/formSlices/organizationFormSlice";
-import {setPersonFormOpen, setPersonFormType} from "../../slices/formSlices/personFormSlice";
+import {
+    resetWorkerForm,
+    setWorkerFormOpen,
+    setWorkerFormValueCoordinatesId,
+    setWorkerFormValueName,
+    setWorkerFormValueOrganizationId, setWorkerFormValuePersonId,
+    setWorkerFormValuePosition,
+    setWorkerFormValueRating,
+    setWorkerFormValueSalary,
+    setWorkerFormValueStartDate,
+    setWorkerFormValueStatus
+} from "../../slices/formSlices/workerFormSlice";
 import CreateCoordinatesButton from "../buttons/CreateCoordinatesButton";
 import CreateOrganizationButton from "../buttons/CreateOrganizationButton";
 import CreatePersonButton from "../buttons/CreatePersonButton";
@@ -29,30 +34,16 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {format} from "date-fns";
 import dayjs, {Dayjs} from "dayjs";
-import {addPopup} from "../../slices/popupSlice";
+import SelectField from "./SelectField";
 
 
 const WorkerForm = () => {
     const workerForm = useSelector((state: RootState) => state.workerForm);
-    const [coordinatesId, setCoordinatesId] = useState("");
-    const [organizationId, setOrganizationId] = useState("");
-    const [personId, setPersonId] = useState("");
-    const [status, setStatus] = useState<Status>(Status.REGULAR);
-    const [position, setPosition] = useState<Position>(Position.BAKER);
     const [startDateErrorMessage, setStartDateErrorMessage] = useState("")
     const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
     const organizations = useSelector((state: RootState) => state.organizations);
     const persons = useSelector((state: RootState) => state.persons);
     const user = useSelector((state: RootState) => state.user);
-    const handleCoordinatesChange = (event: SelectChangeEvent) => {
-        setCoordinatesId(event.target.value);
-    };
-    const handlePersonChange = (event: SelectChangeEvent) => {
-        setPersonId(event.target.value);
-    };
-    const handleOrganizationChange = (event: SelectChangeEvent) => {
-        setOrganizationId(event.target.value);
-    };
 
     const handleChangeStartDate = (newValue: Dayjs | null) => {
         if (newValue === null || !newValue.isValid()) {
@@ -61,19 +52,10 @@ const WorkerForm = () => {
         }
         dispatch(setWorkerFormValueStartDate(format(newValue.toDate(), 'dd.MM.yyyy')))
     }
-    const handleStatusChange = (event: SelectChangeEvent) => {
-        setStatus(event.target.value as Status);
-    };
-    const handlePositionChange = (event: SelectChangeEvent) => {
-        setPosition(event.target.value as Position);
-    };
 
     const handleClose = () => {
         dispatch(setWorkerFormOpen(false));
         dispatch(resetWorkerForm())
-        setPersonId("")
-        setOrganizationId("")
-        setCoordinatesId("")
     };
     const dispatch = useAppDispatch();
 
@@ -85,25 +67,20 @@ const WorkerForm = () => {
         }
         setStartDateErrorMessage("")
 
-        const formData = new FormData(event.currentTarget);
-        const name = formData.get("name") as string;
-        const salary = parseFloat(formData.get("salary") as string);
-        const rating = parseFloat(formData.get("rating") as string);
-
         let worker: Worker = {
             id: workerForm.currentWorkerId,
             creationDate: '',
-            name: name,
-            salary: salary,
-            rating: rating,
-            coordinatesId: parseInt(coordinatesId),
-            status: status,
-            position: position,
-            organizationId: parseInt(organizationId),
-            personId: parseInt(personId),
+            name: workerForm.valueName,
+            salary: workerForm.valueSalary,
+            rating: workerForm.valueRating,
+            coordinatesId: workerForm.valueCoordinatesId,
+            status: workerForm.valueStatus,
+            position: workerForm.valuePosition,
+            organizationId: workerForm.valueOrganizationId,
+            personId: workerForm.valuePersonId,
             creatorName: user.name,
             startDate: workerForm.valueStartDate!
-        };
+        } as Worker;
         if (workerForm.type === 'update') {
             dispatch(updateWorkerThunk(worker))
         } else {
@@ -112,36 +89,13 @@ const WorkerForm = () => {
 
         dispatch(resetWorkerForm())
         handleClose()
-        setCoordinatesId("")
     }
 
     const handleDeleteWorker = () => {
         dispatch(deleteWorkerByIdThunk(workerForm.currentWorkerId))
         dispatch(resetWorkerForm())
         handleClose()
-        setCoordinatesId("")
     }
-
-    useEffect(() => {
-        if (workerForm.valueStatus !== null) {
-            setStatus(workerForm.valueStatus);
-        }
-    }, [workerForm.valueStatus]);
-    useEffect(() => {
-        if (workerForm.valueCoordinatesId !== null) {
-            setCoordinatesId(workerForm.valueCoordinatesId.toString())
-        }
-    }, [workerForm.valueCoordinatesId]);
-    useEffect(() => {
-        if (workerForm.valueOrganizationId !== null) {
-            setOrganizationId(workerForm.valueOrganizationId.toString())
-        }
-    }, [workerForm.valueOrganizationId]);
-    useEffect(() => {
-        if (workerForm.valuePersonId !== null) {
-            setPersonId(workerForm.valuePersonId.toString())
-        }
-    }, [workerForm.valuePersonId]);
 
 
     return (
@@ -162,54 +116,52 @@ const WorkerForm = () => {
                 <DialogContent>
                     <form onSubmit={handleAddWorker}>
                         <TextField name="name" label="Name" variant="standard" required
-                                   defaultValue={workerForm.valueName !== null ? workerForm.valueName : ''}
+                                   value={workerForm.valueName}
                                    disabled={!workerForm.canUpdateObject}
+                                   onChange={(event) => {
+                                       dispatch(setWorkerFormValueName(event.target.value))
+                                   }}
                         />
                         <TextField name="salary" label="Salary" variant="standard" type={'number'} required
+                                   onChange={(event) => {
+                                       const value = parseInt(event.target.value, 10);
+                                       if (!isNaN(value)) {
+                                           dispatch(setWorkerFormValueSalary(parseInt(event.target.value)))
+                                       } else {
+                                           dispatch(setWorkerFormValueSalary(null))
+                                       }
+                                   }}
                                    InputProps={{inputProps: {min: 1}}}
-                                   defaultValue={workerForm.valueSalary !== null ? workerForm.valueSalary : ''}
+                                   defaultValue={workerForm.valueSalary}
                                    disabled={!workerForm.canUpdateObject}/>
                         <TextField name="rating" label="Rating" variant="standard" type={'number'} required
+                                   onChange={(event) => {
+                                       const value = parseInt(event.target.value, 10);
+                                       if (!isNaN(value)) {
+                                           dispatch(setWorkerFormValueRating(parseInt(event.target.value)))
+                                       } else {
+                                           dispatch(setWorkerFormValueRating(null))
+                                       }
+                                   }}
                                    InputProps={{inputProps: {min: 1}}}
-                                   defaultValue={workerForm.valueRating !== null ? workerForm.valueRating : ''}
+                                   defaultValue={workerForm.valueRating}
                                    disabled={!workerForm.canUpdateObject}/>
                         <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
-                            <FormControl variant="outlined" fullWidth
-                                         sx={{width: 150, marginTop: "3%", marginRight: "3%"}}>
-                                <InputLabel>Status</InputLabel>
-                                <Select
-                                    id="status-select"
-                                    value={status}
-                                    onChange={handleStatusChange}
-                                    label="Status"
-                                    required
-                                    disabled={!workerForm.canUpdateObject}
-                                >
-                                    {Object.entries(Status).map(([key, value]) => (
-                                        <MenuItem key={key} value={value}>
-                                            {value}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl variant="outlined" fullWidth
-                                         sx={{width: 150, marginTop: "3%", marginLeft: "3%"}}>
-                                <InputLabel>Position</InputLabel>
-                                <Select
-                                    id="position-select"
-                                    value={position}
-                                    onChange={handlePositionChange}
-                                    label="Position"
-                                    required
-                                    disabled={!workerForm.canUpdateObject}
-                                >
-                                    {Object.entries(Position).map(([key, value]) => (
-                                        <MenuItem key={key} value={value}>
-                                            {value}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <SelectField label="Status"
+                                         value={workerForm.valueStatus}
+                                         changeHandler={(event) => dispatch(setWorkerFormValueStatus(event.target.value as Status))}
+                                         options={Object.values(Status).map(status => ({label: status, value: status}))}
+                                         disabled={!workerForm.canUpdateObject}
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+                            <SelectField label="Position"
+                                         value={workerForm.valuePosition}
+                                         changeHandler={(event) => dispatch(setWorkerFormValuePosition(event.target.value as Position))}
+                                         options={Object.values(Position).map(position => ({
+                                             label: position,
+                                             value: position
+                                         }))}
+                                         disabled={!workerForm.canUpdateObject}
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
                         </Box>
                         <Box sx={{
                             display: 'flex',
@@ -242,23 +194,17 @@ const WorkerForm = () => {
                             width: "100%",
                             flexDirection: "column",
                         }}>
-                            {workerForm.canUpdateObject ? <CreateCoordinatesButton/> : ""}
-                            <FormControl sx={{minWidth: "40%", marginTop: "2%"}}>
-                                <InputLabel>Coordinates</InputLabel>
-                                <Select
-                                    id="select-coordinates"
-                                    label="Coordinates"
-                                    onChange={handleCoordinatesChange}
-                                    required
-                                    value={coordinatesId}
-                                    disabled={!workerForm.canUpdateObject}
-                                >
-                                    {coordinatesList.filter((coordinates) => coordinates.creatorName === user.name || coordinates.id === workerForm.valueCoordinatesId).map((coordinates) =>
-                                        <MenuItem key={coordinates.id}
-                                                  value={coordinates.id}>({coordinates.x}; {coordinates.y})</MenuItem>)
-                                    }
-                                </Select>
-                            </FormControl>
+                            {workerForm.canUpdateObject ? <CreateCoordinatesButton sx={{width: "40%"}}/> : ""}
+                            <Box sx={{minWidth: "40%", marginTop: "2%"}}>
+                                <SelectField label="Coordinates"
+                                             value={workerForm.valueCoordinatesId || ''}
+                                             changeHandler={(event) => dispatch(setWorkerFormValueCoordinatesId(parseInt(event.target.value as string)))}
+                                             options={coordinatesList.filter((coordinates) => coordinates.creatorName === user.name || coordinates.id === workerForm.valueCoordinatesId).map(coordinates => ({
+                                                 label: `${coordinates.x}; ${coordinates.y}`,
+                                                 value: coordinates.id
+                                             }))}
+                                             disabled={!workerForm.canUpdateObject}/>
+                            </Box>
                         </Box>
                         <br></br>
                         <br></br>
@@ -269,24 +215,17 @@ const WorkerForm = () => {
                             width: "100%",
                             flexDirection: "column",
                         }}>
-                            {workerForm.canUpdateObject ? <CreateOrganizationButton/> : ""}
-                            <FormControl sx={{minWidth: "40%", marginTop: "2%"}}>
-                                <InputLabel>Organization</InputLabel>
-                                <Select
-                                    id="select-organization"
-                                    label="Organization"
-                                    onChange={handleOrganizationChange}
-                                    required
-                                    value={organizationId}
-                                    disabled={!workerForm.canUpdateObject}
-                                >
-                                    {organizations.filter((organization) => organization.creatorName === user.name || organization.id === workerForm.valueOrganizationId).map((organization) =>
-                                        <MenuItem key={organization.id}
-                                                  value={organization.id}>{organization.fullName},
-                                            rating: {organization.rating}</MenuItem>)
-                                    }
-                                </Select>
-                            </FormControl>
+                            {workerForm.canUpdateObject ? <CreateOrganizationButton sx={{width: "40%"}}/> : ""}
+                            <Box sx={{minWidth: "40%", marginTop: "2%"}}>
+                                <SelectField label="Organization"
+                                             value={workerForm.valueOrganizationId || ''}
+                                             changeHandler={(event) => dispatch(setWorkerFormValueOrganizationId(parseInt(event.target.value as string)))}
+                                             options={organizations.filter((organization) => organization.creatorName === user.name || organization.id === workerForm.valueOrganizationId).map(organization => ({
+                                                 label: `${organization.fullName}, rating: ${organization.rating}`,
+                                                 value: organization.id
+                                             }))}
+                                             disabled={!workerForm.canUpdateObject}/>
+                            </Box>
                         </Box>
                         <br></br>
                         <br></br>
@@ -297,25 +236,17 @@ const WorkerForm = () => {
                             width: "100%",
                             flexDirection: "column",
                         }}>
-                            {workerForm.canUpdateObject ? <CreatePersonButton/> : ""}
-                            <FormControl sx={{minWidth: "40%", marginTop: "2%"}}>
-                                <InputLabel>Person</InputLabel>
-                                <Select
-                                    id="select-person"
-                                    label="Person"
-                                    onChange={handlePersonChange}
-                                    required
-                                    value={personId}
-                                    disabled={!workerForm.canUpdateObject}
-                                >
-                                    {persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId).map((person) =>
-                                        <MenuItem key={person.id}
-                                                  value={person.id}>
-                                            eyeColor: {person.eyeColor}, hairColor: {person.hairColor},
-                                            height: {person.height}, nationality: {person.nationality}</MenuItem>)
-                                    }
-                                </Select>
-                            </FormControl>
+                            {workerForm.canUpdateObject ? <CreatePersonButton sx={{width: "40%"}}/> : ""}
+                            <Box sx={{minWidth: "40%", marginTop: "2%"}}>
+                                <SelectField label="Organization"
+                                             value={workerForm.valuePersonId || ''}
+                                             changeHandler={(event) => dispatch(setWorkerFormValuePersonId(parseInt(event.target.value as string)))}
+                                             options={persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId).map(person => ({
+                                                 label: `eyeColor: ${person.eyeColor}, hairColor: ${person.hairColor}, height: ${person.height}, nationality: ${person.nationality}`,
+                                                 value: person.id
+                                             }))}
+                                             disabled={!workerForm.canUpdateObject}/>
+                            </Box>
                         </Box>
 
                         <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>

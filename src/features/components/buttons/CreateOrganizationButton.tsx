@@ -6,15 +6,16 @@ import {
     setOrganizationFormOpen,
     setOrganizationFormType
 } from "../../slices/formSlices/organizationFormSlice";
+import CreateButtonProps from "./CreateButtonProps";
 
-const CreateOrganizationButton = () => {
+const CreateOrganizationButton = (props:CreateButtonProps) => {
     const dispatch = useAppDispatch();
     return (
-        <Button variant="contained" sx={{width: "40%"}} onClick={() => {
+        <Button variant="contained" onClick={() => {
             dispatch(setOrganizationFormOpen(true))
             dispatch(setOrganizationFormType('create'))
             dispatch(setOrganizationFormCanUpdateObject(true))
-        }}> Create Organization </Button>)
+        }} sx={props.sx}> Create Organization </Button>)
 }
 
 export default CreateOrganizationButton

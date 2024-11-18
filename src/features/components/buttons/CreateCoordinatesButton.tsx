@@ -6,15 +6,16 @@ import {
 import React from "react";
 import {useAppDispatch} from "../../../store";
 import Button from "@mui/material/Button";
+import CreateButtonProps from "./CreateButtonProps";
 
-const CreateCoordinatesButton = () => {
+const CreateCoordinatesButton = (props:CreateButtonProps) => {
     const dispatch = useAppDispatch();
     return (
-        <Button variant="contained" sx={{width: "40%"}} onClick={() => {
+        <Button variant="contained" onClick={() => {
             dispatch(setCoordinatesFormOpen(true))
             dispatch(setCoordinatesFormType('create'))
             dispatch(setCoordinatesFormCanUpdateObject(true))
-        }}>Create Coordinates</Button>)
+        }} sx={props.sx}>Create Coordinates</Button>)
 }
 
 export default CreateCoordinatesButton

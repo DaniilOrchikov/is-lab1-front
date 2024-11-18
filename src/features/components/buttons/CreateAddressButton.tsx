@@ -6,15 +6,16 @@ import {
     setAddressFormOpen,
     setAddressFormType
 } from "../../slices/formSlices/addressFormSlice";
+import CreateButtonProps from "./CreateButtonProps";
 
-const CreateAddressButton = () => {
+const CreateAddressButton = (props:CreateButtonProps) => {
     const dispatch = useAppDispatch();
     return (
-        <Button variant="contained" sx={{width: "40%"}} onClick={() => {
+        <Button variant="contained" onClick={() => {
             dispatch(setAddressFormOpen(true));
             dispatch(setAddressFormType('create'));
             dispatch(setAddressFormCanUpdateObject(true));
-        }}>Create Address</Button>
+        }} sx={props.sx}>Create Address</Button>
     );
 };
 

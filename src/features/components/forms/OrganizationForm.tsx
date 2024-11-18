@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import store, {RootState, useAppDispatch} from "../../../store";
-import {Organization, OrganizationType, PopupTypes, Status} from '../../../types';
+import {Organization, OrganizationType, PopupTypes} from '../../../types';
 import Button from '@mui/material/Button';
 import {
     Box,
     Dialog,
     DialogContent,
-    DialogTitle, InputLabel, MenuItem, Select, SelectChangeEvent, Typography,
+    DialogTitle, Typography,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {
@@ -16,50 +16,40 @@ import {
 } from "../../slices/organizationSlice";
 import {useSelector} from "react-redux";
 import {
-    setOrganizationFormOpen, resetOrganizationForm
+    setOrganizationFormOpen,
+    resetOrganizationForm,
+    setOrganizationFormValueAddressId,
+    setOrganizationFormValueType,
+    setOrganizationFormValueFullName,
+    setOrganizationFormValueRating,
+    setOrganizationFormValueAnnualTurnover,
+    setOrganizationFormValueEmployeesCount
 } from "../../slices/formSlices/organizationFormSlice";
-import FormControl from "@mui/material/FormControl";
 import {addPopup} from "../../slices/popupSlice";
 import CreateAddressButton from "../buttons/CreateAddressButton";
+import SelectField from "./SelectField";
 
 
 const OrganizationForm = () => {
     const organizationForm = useSelector((state: RootState) => state.organizationForm);
     const dispatch = useAppDispatch();
-    const [addressId, setAddressId] = useState("");
-    const [type, setType] = useState(OrganizationType.COMMERCIAL);
     const organizations = useSelector((state: RootState) => state.organizations);
     const addresses = useSelector((state: RootState) => state.addresses);
     const [nameErrorMessage, setNameErrorMessage] = useState("")
     const user = useSelector((state: RootState) => state.user);
 
-
-    const handleAddressChange = (event: SelectChangeEvent) => {
-        setAddressId(event.target.value);
-    };
-
-
-    const handleTypeChange = (event: SelectChangeEvent) => {
-        setType(event.target.value as OrganizationType);
-    };
-
     const handleClose = () => {
         dispatch(setOrganizationFormOpen(false));
         dispatch(resetOrganizationForm())
-        setAddressId("")
+        dispatch(setOrganizationFormValueAddressId(null))
     };
 
     const handleAddOrganization = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
-        const annualTurnover = parseInt(formData.get("annualTurnover") as string);
-        const employeesCount = parseInt(formData.get("employeesCount") as string);
-        const rating = parseInt(formData.get("rating") as string);
-        const fullName = formData.get("fullName") as string;
         dispatch(fetchOrganizationsThunk())
 
-        if (organizations.filter(org => org.fullName === fullName).length > (organizationForm.type === 'create' ? 0 : 1)) {
+        if (organizations.filter(org => org.fullName === organizationForm.valueFullName).length > (organizationForm.type === 'create' ? 0 : 1)) {
             store.dispatch(addPopup({
                 message: `Organization with that name exists`,
                 duration: 5000,
@@ -70,12 +60,12 @@ const OrganizationForm = () => {
         } else {
             let organization: Organization = {
                 id: organizationForm.currentOrganizationId,
-                addressId: parseInt(addressId),
-                annualTurnover: annualTurnover,
-                employeesCount: employeesCount,
-                fullName: fullName,
-                rating: rating,
-                type: type,
+                addressId: organizationForm.valueAddressId,
+                annualTurnover: organizationForm.valueAnnualTurnover,
+                employeesCount: organizationForm.valueEmployeesCount,
+                fullName: organizationForm.valueFullName,
+                rating: organizationForm.valueRating,
+                type: organizationForm.valueType,
                 creatorName: user.name
             } as Organization;
             if (organizationForm.type === 'update') {
@@ -94,17 +84,6 @@ const OrganizationForm = () => {
         handleClose()
     }
 
-    useEffect(() => {
-        if (organizationForm.valueType !== null) {
-            setType(organizationForm.valueType);
-        }
-    }, [organizationForm.valueType]);
-    useEffect(() => {
-        if (organizationForm.valueAddressId !== null) {
-            setAddressId(organizationForm.valueAddressId.toString())
-        }
-    }, [organizationForm.valueAddressId]);
-
     return (
         <Box>
             <Dialog
@@ -122,64 +101,80 @@ const OrganizationForm = () => {
                     </Typography> : ""}
                 <DialogContent>
                     <form onSubmit={handleAddOrganization}>
-                        <Box>
+                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
                             <TextField name="fullName" label="Full Name" variant="standard"
-                                       onChange={() => {
+                                       onChange={(event) => {
                                            setNameErrorMessage("")
+                                           dispatch(setOrganizationFormValueFullName(event.target.value))
                                        }}
                                        required
-                                       defaultValue={organizationForm.valueFullName !== null ? organizationForm.valueFullName : ''}
+                                       value={organizationForm.valueFullName}
                                        disabled={!organizationForm.canUpdateObject}/>
                         </Box>
                         <Typography sx={{color: "red", height: "1em"}} variant="caption">{nameErrorMessage}</Typography>
-                        <Box>
+                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
 
                             <TextField name="rating" label="Rating" variant="standard"
+                                       onChange={(event) => {
+                                           const value = parseInt(event.target.value, 10);
+                                           if (!isNaN(value)) {
+                                               dispatch(setOrganizationFormValueRating(parseInt(event.target.value)))
+                                           } else {
+                                               dispatch(setOrganizationFormValueRating(null))
+                                           }
+                                       }}
                                        sx={{marginTop: "5%"}}
                                        type={'number'}
-                                       defaultValue={organizationForm.valueRating !== null ? organizationForm.valueRating : ''}
+                                       defaultValue={organizationForm.valueRating}
                                        required
                                        InputProps={{inputProps: {min: 1}}}
                                        disabled={!organizationForm.canUpdateObject}/>
-                        </Box>
-                        <Box>
 
                             <TextField name="annualTurnover" label="Annual Turnover" variant="standard"
+                                       onChange={(event) => {
+                                           const value = parseInt(event.target.value, 10);
+                                           if (!isNaN(value)) {
+                                               dispatch(setOrganizationFormValueAnnualTurnover(parseInt(event.target.value)))
+                                           } else {
+                                               dispatch(setOrganizationFormValueAnnualTurnover(null))
+                                           }
+                                       }}
                                        sx={{marginTop: "5%"}}
                                        type={'number'}
                                        required
-                                       defaultValue={organizationForm.valueAnnualTurnover !== null ? organizationForm.valueAnnualTurnover : ''}
+                                       defaultValue={organizationForm.valueAnnualTurnover}
                                        InputProps={{inputProps: {min: 1}}}
                                        disabled={!organizationForm.canUpdateObject}/>
                         </Box>
-                        <Box>
+                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
 
                             <TextField name="employeesCount" label="Employees Count" variant="standard"
+                                       onChange={(event) => {
+                                           const value = parseInt(event.target.value, 10);
+                                           if (!isNaN(value)) {
+                                               dispatch(setOrganizationFormValueEmployeesCount(parseInt(event.target.value)))
+                                           } else {
+                                               dispatch(setOrganizationFormValueEmployeesCount(null))
+                                           }
+                                       }}
                                        sx={{marginTop: "5%"}}
                                        type={'number'}
                                        required
-                                       defaultValue={organizationForm.valueEmployeesCount !== null ? organizationForm.valueEmployeesCount : ''}
+                                       defaultValue={organizationForm.valueEmployeesCount}
                                        InputProps={{inputProps: {min: 1}}}
                                        disabled={!organizationForm.canUpdateObject}/>
                         </Box>
-
-                        <FormControl variant="outlined" fullWidth sx={{width: 300, marginTop: "8%"}}>
-                            <InputLabel>Type</InputLabel>
-                            <Select
-                                id="type-select"
-                                value={type}
-                                onChange={handleTypeChange}
-                                label="Status"
-                                required
-                                disabled={!organizationForm.canUpdateObject}
-                            >
-                                {Object.entries(OrganizationType).map(([key, value]) => (
-                                    <MenuItem key={key} value={value}>
-                                        {value}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                            <SelectField label="Type"
+                                         value={organizationForm.valueType}
+                                         changeHandler={(event) => dispatch(setOrganizationFormValueType(event.target.value as OrganizationType))}
+                                         options={Object.values(OrganizationType).map(type => ({
+                                             label: type,
+                                             value: type
+                                         }))}
+                                         disabled={!organizationForm.canUpdateObject}
+                                         style={{width: 150, marginTop: "4%", marginLeft: "3%"}}/>
+                        </Box>
                         <br></br>
                         <br></br>
                         <Box sx={{
@@ -189,24 +184,17 @@ const OrganizationForm = () => {
                             width: "100%",
                             flexDirection: "column",
                         }}>
-                            {organizationForm.canUpdateObject ? <CreateAddressButton/> : ""}
-                            <FormControl sx={{minWidth: "40%", marginTop: "2%"}}>
-                                <InputLabel>Address</InputLabel>
-                                <Select
-                                    id="select-address"
-                                    label="Address"
-                                    onChange={handleAddressChange}
-                                    required
-                                    value={addressId}
-                                    disabled={!organizationForm.canUpdateObject}
-                                >
-                                    {addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId).map((address) =>
-                                        <MenuItem key={address.id}
-                                                  value={address.id}>({address.street},
-                                            zipCode: {address.zipCode})</MenuItem>)
-                                    }
-                                </Select>
-                            </FormControl>
+                            {organizationForm.canUpdateObject ? <CreateAddressButton sx={{width: "40%"}}/> : ""}
+                            <Box sx={{minWidth: "40%", marginTop: "4%"}}>
+                                <SelectField label="Address"
+                                             value={organizationForm.valueAddressId || ''}
+                                             changeHandler={(event) => dispatch(setOrganizationFormValueAddressId(parseInt(event.target.value as string)))}
+                                             options={addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId).map(address => ({
+                                                 label: `${address.street}, zipCode: ${address.zipCode}`,
+                                                 value: address.id
+                                             }))}
+                                             disabled={!organizationForm.canUpdateObject}/>
+                            </Box>
                         </Box>
                         <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
                             {organizationForm.type === 'update' && organizationForm.canUpdateObject ?

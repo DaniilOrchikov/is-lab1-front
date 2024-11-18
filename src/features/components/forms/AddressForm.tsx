@@ -16,12 +16,15 @@ import {
     updateAddressThunk,
 } from "../../slices/addressSlice";
 import { useSelector } from "react-redux";
-import {resetAddressForm, setAddressFormOpen} from "../../slices/formSlices/addressFormSlice";
+import {
+    resetAddressForm,
+    setAddressFormOpen,
+    setAddressFormValueStreet, setAddressFormValueZipCode
+} from "../../slices/formSlices/addressFormSlice";
 
 const AddressForm = () => {
     const dispatch = useAppDispatch();
 
-    // Воспользуйтесь селекторами для извлечения данных формы и состояния
     const addressForm = useSelector((state: RootState) => state.addressForm);
     const user = useSelector((state: RootState) => state.user);
 
@@ -32,15 +35,11 @@ const AddressForm = () => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-
-        const street = formData.get("street") as string;
-        const zipCode = formData.get("zipCode") as string;
 
         let address: Address = {
             id: addressForm.currentAddressId,
-            street: street,
-            zipCode: zipCode,
+            street: addressForm.valueStreet,
+            zipCode: addressForm.valueZipCode,
             creatorName: user.name
         };
 
@@ -78,12 +77,16 @@ const AddressForm = () => {
                 <DialogContent>
                     <form onSubmit={handleSubmit}>
                         <Box>
-                            <TextField name="street" label="Street" variant="standard" required
-                                       defaultValue={addressForm.valueStreet !== null ? addressForm.valueStreet : ''}
+                            <TextField name="street" label="Street" variant="standard"
+                                       required
+                                       value={addressForm.valueStreet}
+                                       onChange={(event) => dispatch(setAddressFormValueStreet(event.target.value))}
                                        disabled={!addressForm.canUpdateObject}
                             />
-                            <TextField name="zipCode" label="Zip Code" variant="standard" required
-                                       defaultValue={addressForm.valueZipCode !== null ? addressForm.valueZipCode : ''}
+                            <TextField name="zipCode" label="Zip Code" variant="standard"
+                                       required
+                                       value={addressForm.valueZipCode}
+                                       onChange={(event) => dispatch(setAddressFormValueZipCode(event.target.value))}
                                        disabled={!addressForm.canUpdateObject} />
                         </Box>
                         <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>

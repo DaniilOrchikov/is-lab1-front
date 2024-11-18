@@ -8,32 +8,32 @@ const workerFormSlice = createSlice({
     initialState: {
         open: false,
         valueCreationDate: null,
-        valueName: null,
-        valueStatus: null,
-        valuePosition: null,
+        valueName: "",
+        valueStatus: "",
+        valuePosition: "",
         valueSalary: null,
         valueRating: null,
         valueCoordinatesId: null,
         valueOrganizationId: null,
         valuePersonId: null,
-        creatorName: null,
+        creatorName: "",
         valueStartDate: format(dayjs().toDate(), 'dd.MM.yyyy'),
         type: 'create',
         currentWorkerId: -1,
         canUpdateObject: false
     } as {
         open: boolean,
-        valueCreationDate: string| null,
-        valueName: string | null,
-        valueStatus: Status | null,
-        valuePosition: Position | null,
+        valueCreationDate: string | null,
+        valueName: string,
+        valueStatus: Status | string,
+        valuePosition: Position | string,
         valueSalary: number | null,
         valueRating: number | null,
         valueCoordinatesId: number | null,
         valueOrganizationId: number | null,
         valuePersonId: number | null,
         valueStartDate: string | null,
-        creatorName: string | null,
+        creatorName: string,
         type: 'update' | 'create',
         currentWorkerId: number,
         canUpdateObject: boolean
@@ -45,13 +45,13 @@ const workerFormSlice = createSlice({
         setWorkerFormValueCreationDate: (state, action: PayloadAction<string | null>) => {
             state.valueCreationDate = action.payload;
         },
-        setWorkerFormValueName: (state, action: PayloadAction<string | null>) => {
+        setWorkerFormValueName: (state, action: PayloadAction<string>) => {
             state.valueName = action.payload;
         },
-        setWorkerFormValueStatus: (state, action: PayloadAction<Status | null>) => {
+        setWorkerFormValueStatus: (state, action: PayloadAction<Status | string>) => {
             state.valueStatus = action.payload;
         },
-        setWorkerFormValuePosition: (state, action: PayloadAction<Position | null>) => {
+        setWorkerFormValuePosition: (state, action: PayloadAction<Position | string>) => {
             state.valuePosition = action.payload;
         },
         setWorkerFormValueSalary: (state, action: PayloadAction<number | null>) => {
@@ -75,7 +75,7 @@ const workerFormSlice = createSlice({
         setWorkerFormValueOrganizationId: (state, action: PayloadAction<number | null>) => {
             state.valueOrganizationId = action.payload;
         },
-        setWorkerFormCreatorName: (state, action: PayloadAction<string | null>) => {
+        setWorkerFormCreatorName: (state, action: PayloadAction<string>) => {
             state.creatorName = action.payload
         },
         setWorkerFormCanUpdateObject: (state, action: PayloadAction<boolean>) => {
@@ -88,16 +88,16 @@ const workerFormSlice = createSlice({
             return {
                 open: state.open,
                 valueCreationDate: null,
-                valueName: null,
-                valueStatus: null,
+                valueName: "",
+                valueStatus: "",
                 valueSalary: null,
                 valueRating: null,
-                valuePosition: null,
+                valuePosition: "",
                 valueCoordinatesId: null,
                 valueOrganizationId: null,
                 valuePersonId: null,
                 valueStartDate: format(dayjs().toDate(), 'dd.MM.yyyy'),
-                creatorName: null,
+                creatorName: "",
                 type: state.type,
                 currentWorkerId: -1,
                 canUpdateObject: state.canUpdateObject
