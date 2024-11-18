@@ -2,7 +2,7 @@ import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {Person, PopupTypes} from '../../types';
 import {
     fetchPersons, createPerson, updatePersonById, deletePersonById
-} from '../api';
+} from '../api/personApi';
 import store from "../../store";
 import {addPopup} from "./popupSlice";
 import {setWorkerFormValuePersonId} from "./formSlices/workerFormSlice";

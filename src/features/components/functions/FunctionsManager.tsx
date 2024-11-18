@@ -9,7 +9,7 @@ import {
     countByPerson,
     hireEmployee,
     adjustEmployeeSalary,
-} from "../../api";
+} from "../../api/functionsApi";
 import {addPopup} from "../../slices/popupSlice";
 import {PopupTypes} from "../../../types";
 

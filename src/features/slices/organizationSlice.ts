@@ -5,7 +5,7 @@ import {
     createOrganization,
     updateOrganizationById,
     deleteOrganizationById,
-} from '../api';
+} from '../api/organizationApi';
 import store from "../../store";
 import {addPopup} from "./popupSlice";
 import {setWorkerFormValueOrganizationId} from "./formSlices/workerFormSlice";

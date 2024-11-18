@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {PopupTypes, Worker} from '../../types';
-import {fetchWorkers, createWorker, updateWorkerById, deleteWorkerById} from '../api';
+import {fetchWorkers, createWorker, updateWorkerById, deleteWorkerById} from '../api/workerApi';
 import store from "../../store";
 import {addPopup} from "./popupSlice";
 import {format} from 'date-fns';

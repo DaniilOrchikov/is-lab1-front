@@ -5,7 +5,7 @@ import {
     createAddress,
     updateAddressById,
     deleteAddressById,
-} from '../api';
+} from '../api/addressApi';
 import store from "../../store";
 import { addPopup } from "./popupSlice";
 import {setOrganizationFormValueAddressId} from "./formSlices/organizationFormSlice";

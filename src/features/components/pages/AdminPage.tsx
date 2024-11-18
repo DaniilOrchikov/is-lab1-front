@@ -2,7 +2,7 @@ import {Box, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import {addAdmin, deleteAdmin, fetchAdminsQuery} from "../../api";
+import {addAdmin, deleteAdmin, fetchAdminsQuery} from "../../api/adminApi";
 import {useAppDispatch} from "../../../store";
 
 const AdminPage = () => {

@@ -1,7 +1,7 @@
 import {RootState, useAppDispatch} from "../../store";
 import {useSelector} from "react-redux";
 import {useEffect} from "react";
-import {configureApiWithAuth} from "../api";
+import {configureApiWithAuth} from "../utils/auth";
 import {fetchCoordinatesThunk} from "../slices/coordinatesSlice";
 import {fetchOrganizationsThunk} from "../slices/organizationSlice";
 import {fetchWorkersThunk} from "../slices/workersSlice";

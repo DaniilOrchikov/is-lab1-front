@@ -2,7 +2,7 @@ import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {Coordinates, PopupTypes} from '../../types';
 import {
     fetchCoordinates, createCoordinates, updateCoordinatesById, deleteCoordinatesById
-} from '../api';
+} from '../api/coordinatesApi';
 import store from "../../store";
 import {addPopup} from "./popupSlice";
 import {setWorkerFormValueCoordinatesId} from "./formSlices/workerFormSlice";
