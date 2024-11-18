@@ -138,3 +138,29 @@ export const updateAddressById = async (address: Address): Promise<void> => {
 export const deleteAddressById = async (id: number): Promise<void> => {
     await api.delete(`/addresses/${id}`);
 };
+
+// Functions
+
+export const deleteByPerson = async (personId: number): Promise<boolean> => {
+    const response = await api.delete(`/worker/person/${personId}`);
+    return response.data;
+};
+
+export const countByPerson = async (personId: number): Promise<number> => {
+    const response = await api.get(`/worker/person/${personId}`);
+    return response.data;
+};
+
+export const filterByStartDate = async (startDate: string): Promise<number[]> => {
+    const response = await api.get(`/worker/started_before/${startDate}`);
+    return response.data;
+};
+
+export const hireEmployee = async (workerId: number, organizationId: number): Promise<void> => {
+    await api.post(`/organization/hire`, {workerId: workerId, organizationId: organizationId});
+};
+
+export const adjustEmployeeSalary = async (workerId: number, coefficient: number): Promise<number> => {
+    const response = await api.post(`/worker/index`, {workerId: workerId, coefficient: coefficient});
+    return response.data;
+};

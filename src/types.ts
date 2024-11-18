@@ -2,14 +2,14 @@ export interface Worker {
     id: number;
     name: string;
     coordinatesId: number;
-    organizationId: number;
+    organizationId: number | null;
     creationDate: string
     salary: number;
-    rating: number;
+    rating: number | null;
     startDate: string;
     position: Position;
     status: Status;
-    personId: number;
+    personId: number | null;
     creatorName: string;
 }
 
@@ -57,7 +57,7 @@ export interface Location {
     id: number
     x: number;
     y: number;
-    z: number;
+    z: number | null;
     name: string;
     creatorName: string;
 }

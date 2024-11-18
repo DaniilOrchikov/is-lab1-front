@@ -81,19 +81,24 @@ const PersonForm = () => {
                                          changeHandler={(event) => dispatch(setPersonFormValueEyeColor(event.target.value as Color))}
                                          options={Object.values(Color).map(color => ({label: color, value: color}))}
                                          disabled={!personForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}
+                                         required={false}/>
 
                             <SelectField label="Hair Color"
                                          value={personForm.valueHairColor}
                                          changeHandler={(event) => dispatch(setPersonFormValueHairColor(event.target.value as Color))}
                                          options={Object.values(Color).map(color => ({label: color, value: color}))}
                                          disabled={!personForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}
+                                         required={false}/>
 
                             <SelectField label="Nationality"
                                          value={personForm.valueNationality}
                                          changeHandler={(event) => dispatch(setPersonFormValueNationality(event.target.value as Country))}
-                                         options={Object.values(Country).map(country => ({label: country, value: country}))}
+                                         options={Object.values(Country).map(country => ({
+                                             label: country,
+                                             value: country
+                                         }))}
                                          disabled={!personForm.canUpdateObject}
                                          style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
                         </Box>
@@ -105,8 +110,7 @@ const PersonForm = () => {
                                            const value = parseInt(event.target.value, 10);
                                            if (!isNaN(value)) {
                                                dispatch(setPersonFormValueHeight(parseInt(event.target.value)))
-                                           }
-                                           else {
+                                           } else {
                                                dispatch(setPersonFormValueHeight(null))
                                            }
                                        }}

@@ -42,6 +42,7 @@ const OrganizationForm = () => {
         dispatch(setOrganizationFormOpen(false));
         dispatch(resetOrganizationForm())
         dispatch(setOrganizationFormValueAddressId(null))
+        setNameErrorMessage("")
     };
 
     const handleAddOrganization = (event: React.FormEvent<HTMLFormElement>) => {
@@ -49,7 +50,7 @@ const OrganizationForm = () => {
 
         dispatch(fetchOrganizationsThunk())
 
-        if (organizations.filter(org => org.fullName === organizationForm.valueFullName).length > (organizationForm.type === 'create' ? 0 : 1)) {
+        if (organizationForm.valueFullName !== "" && organizations.filter(org => org.fullName === organizationForm.valueFullName).length > (organizationForm.type === 'create' ? 0 : 1)) {
             store.dispatch(addPopup({
                 message: `Organization with that name exists`,
                 duration: 5000,
@@ -107,11 +108,13 @@ const OrganizationForm = () => {
                                            setNameErrorMessage("")
                                            dispatch(setOrganizationFormValueFullName(event.target.value))
                                        }}
-                                       required
                                        value={organizationForm.valueFullName}
                                        disabled={!organizationForm.canUpdateObject}/>
                         </Box>
-                        <Typography sx={{color: "red", height: "1em"}} variant="caption">{nameErrorMessage}</Typography>
+                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                            <Typography sx={{color: "red", height: "1em"}}
+                                        variant="caption">{nameErrorMessage}</Typography>
+                        </Box>
                         <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
 
                             <TextField name="rating" label="Rating" variant="standard"

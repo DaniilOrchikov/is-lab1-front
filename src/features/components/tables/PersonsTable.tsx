@@ -98,8 +98,6 @@ const PersonTable = () => {
         return data;
     };
 
-    const dispatch = useAppDispatch();
-
     return (
         <>
             <UniversalTable

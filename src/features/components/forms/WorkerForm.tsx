@@ -134,7 +134,7 @@ const WorkerForm = () => {
                                    InputProps={{inputProps: {min: 1}}}
                                    defaultValue={workerForm.valueSalary}
                                    disabled={!workerForm.canUpdateObject}/>
-                        <TextField name="rating" label="Rating" variant="standard" type={'number'} required
+                        <TextField name="rating" label="Rating" variant="standard" type={'number'}
                                    onChange={(event) => {
                                        const value = parseInt(event.target.value, 10);
                                        if (!isNaN(value)) {
@@ -161,7 +161,8 @@ const WorkerForm = () => {
                                              value: position
                                          }))}
                                          disabled={!workerForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}
+                                         required={false}/>
                         </Box>
                         <Box sx={{
                             display: 'flex',
@@ -224,7 +225,8 @@ const WorkerForm = () => {
                                                  label: `${organization.fullName}, rating: ${organization.rating}`,
                                                  value: organization.id
                                              }))}
-                                             disabled={!workerForm.canUpdateObject}/>
+                                             disabled={!workerForm.canUpdateObject}
+                                             required={false}/>
                             </Box>
                         </Box>
                         <br></br>
@@ -238,14 +240,15 @@ const WorkerForm = () => {
                         }}>
                             {workerForm.canUpdateObject ? <CreatePersonButton sx={{width: "40%"}}/> : ""}
                             <Box sx={{minWidth: "40%", marginTop: "2%"}}>
-                                <SelectField label="Organization"
+                                <SelectField label="Person"
                                              value={workerForm.valuePersonId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValuePersonId(parseInt(event.target.value as string)))}
                                              options={persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId).map(person => ({
                                                  label: `eyeColor: ${person.eyeColor}, hairColor: ${person.hairColor}, height: ${person.height}, nationality: ${person.nationality}`,
                                                  value: person.id
                                              }))}
-                                             disabled={!workerForm.canUpdateObject}/>
+                                             disabled={!workerForm.canUpdateObject}
+                                             required={false}/>
                             </Box>
                         </Box>
 

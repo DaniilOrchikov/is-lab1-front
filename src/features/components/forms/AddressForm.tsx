@@ -84,7 +84,6 @@ const AddressForm = () => {
                                        disabled={!addressForm.canUpdateObject}
                             />
                             <TextField name="zipCode" label="Zip Code" variant="standard"
-                                       required
                                        value={addressForm.valueZipCode}
                                        onChange={(event) => dispatch(setAddressFormValueZipCode(event.target.value))}
                                        disabled={!addressForm.canUpdateObject} />

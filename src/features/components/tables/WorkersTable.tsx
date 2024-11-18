@@ -221,10 +221,16 @@ const WorkersTable = () => {
                 return 0
             }
         }
-        if (b[orderBy] < a[orderBy]) {
+        if (b[orderBy] === null) {
+            return -1
+        }
+        if (a[orderBy] === null) {
+            return 1
+        }
+        if (b[orderBy]! < a[orderBy]!) {
             return -1;
         }
-        if (b[orderBy] > a[orderBy]) {
+        if (b[orderBy]! > a[orderBy]!) {
             return 1;
         }
         return 0;
