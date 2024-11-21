@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {
     Box,
     Table,
@@ -8,13 +8,12 @@ import {
     TableHead,
     TableRow,
     TablePagination,
-    TableSortLabel, MenuItem, Select
+    TableSortLabel,
+    TextField,
 } from "@mui/material";
 import {visuallyHidden} from '@mui/utils';
-import TextField from "@mui/material/TextField";
 
 type Order = 'asc' | 'desc';
-
 
 interface FilterComponentProps {
     value: any;
@@ -28,15 +27,6 @@ export interface HeadCell<T> {
     filterComponent?: (props: FilterComponentProps) => React.ReactNode;
     filterFunction?: (value: T[keyof T], filterValue: any) => boolean;
 }
-
-
-interface EnhancedTableProps<T> {
-    onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
-    order: Order;
-    orderBy: keyof T;
-    headCells: HeadCell<T>[];
-}
-
 
 interface EnhancedTableProps<T> {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
@@ -168,7 +158,7 @@ const UniversalTable = <T extends { id: number }>({
 
     return (
         <Box>
-            <TableContainer>
+            <TableContainer style={{overflowX: 'auto'}}>
                 <Table aria-labelledby="tableTitle" size="medium">
                     <EnhancedTableHead
                         order={order}
@@ -182,7 +172,8 @@ const UniversalTable = <T extends { id: number }>({
                         {visibleRows.map((row) => (
                             <TableRow hover key={row.id} onDoubleClick={() => handleUpdateItem(row.id)}>
                                 {headCells.map((column) => (
-                                    <TableCell key={String(column.id)} align={column.numeric ? 'right' : 'left'}>
+                                    <TableCell key={String(column.id)} align={column.numeric ? 'right' : 'left'}
+                                               sx={{wordBreak: 'break-word', width:150}}>
                                         {formatCellData(column.id, row[column.id])}
                                     </TableCell>
                                 ))}
@@ -213,16 +204,15 @@ const UniversalTable = <T extends { id: number }>({
     );
 };
 
-export const standardFilterField = ({value, onChange}: FilterComponentProps, placeholder: string) => {
+export const standardFilterField = ({value, onChange}: FilterComponentProps) => {
     return (
         <TextField
             variant="standard"
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            sx={{width: 100}}
+            placeholder="Filter"
         />
-    )
-}
+    );
+};
 
 export default UniversalTable;

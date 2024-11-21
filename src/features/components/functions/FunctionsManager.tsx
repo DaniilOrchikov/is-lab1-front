@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Menu, MenuItem, Box, TextField} from "@mui/material";
+import {Button, Menu, MenuItem, Box, TextField, Typography, DialogTitle, DialogContent, Dialog} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store";
 import FunctionDialog from "./FunctionDialog";
@@ -8,10 +8,16 @@ import {
     deleteByPerson,
     countByPerson,
     hireEmployee,
-    adjustEmployeeSalary,
+    adjustEmployeeSalary, filterByStartDate,
 } from "../../api/functionsApi";
 import {addPopup} from "../../slices/popupSlice";
-import {PopupTypes} from "../../../types";
+import {PopupTypes, Worker} from "../../../types";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker} from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import {format} from "date-fns";
+import WorkersTable from "../tables/WorkersTable";
 
 const FunctionsManager: React.FC = () => {
     const dispatch = useDispatch();
@@ -25,6 +31,7 @@ const FunctionsManager: React.FC = () => {
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [countDialogOpen, setCountDialogOpen] = useState(false);
+    const [filterDialogOpen, setFilterDialogOpen] = useState(false);
     const [hireDialogOpen, setHireDialogOpen] = useState(false);
     const [adjustSalaryDialogOpen, setAdjustSalaryDialogOpen] = useState(false);
 
@@ -33,7 +40,13 @@ const FunctionsManager: React.FC = () => {
     const [hireWorkerId, setHireWorkerId] = useState<number | null>(null);
     const [hireOrganizationId, setHireOrganizationId] = useState<number | null>(null);
     const [adjustWorkerId, setAdjustWorkerId] = useState<number | null>(null);
-    const [salaryCoefficient, setSalaryCoefficient] = useState<number>(1);
+    const [salaryCoefficient, setSalaryCoefficient] = useState(1);
+    const [startDate, setStartDate] = useState<string | null>(format(dayjs().toDate(), 'dd.MM.yyyy'));
+    const [filteredWorkers, setFilteredWorkers] = useState<Worker[]>([]);
+
+    const [startDateErrorMessage, setStartDateErrorMessage] = useState("");
+
+    const [openWorkersTable, setOpenWorkersTable] = useState(false);
 
     const handleClickFunctions = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -43,7 +56,7 @@ const FunctionsManager: React.FC = () => {
         setAnchorEl(null);
     };
 
-    const handleOpenDialog = (dialogType: "delete" | "count" | "hire" | "adjust") => {
+    const handleOpenDialog = (dialogType: "delete" | "count" | "filter" | "hire" | "adjust") => {
         switch (dialogType) {
             case "delete":
                 setDeleteDialogOpen(true);
@@ -53,6 +66,9 @@ const FunctionsManager: React.FC = () => {
                 break;
             case "hire":
                 setHireDialogOpen(true);
+                break;
+            case "filter":
+                setFilterDialogOpen(true);
                 break;
             case "adjust":
                 setAdjustSalaryDialogOpen(true);
@@ -66,6 +82,7 @@ const FunctionsManager: React.FC = () => {
     const handleCloseAllDialogs = () => {
         setDeleteDialogOpen(false);
         setCountDialogOpen(false);
+        setFilterDialogOpen(false);
         setHireDialogOpen(false);
         setAdjustSalaryDialogOpen(false);
 
@@ -73,6 +90,7 @@ const FunctionsManager: React.FC = () => {
         setCountPersonId(null);
         setHireWorkerId(null);
         setHireOrganizationId(null);
+        setStartDateErrorMessage("");
         setAdjustWorkerId(null);
         setSalaryCoefficient(1);
     };
@@ -122,6 +140,41 @@ const FunctionsManager: React.FC = () => {
             );
         }
     };
+
+    const handleClose = () => {
+        setOpenWorkersTable(false);
+    };
+    const handleFilterSubmit = async (event: React.FormEvent) => {
+        event.preventDefault()
+        try {
+            if (startDate === null) {
+                setStartDateErrorMessage("Specify the correct date")
+                return
+            }
+            const ids = await filterByStartDate(startDate!);
+            setFilteredWorkers(workers.filter((worker) => ids.find((id) => worker.id === id) !== undefined))
+            handleCloseAllDialogs();
+            if (ids.length > 0) {
+                setOpenWorkersTable(true)
+            } else {
+                dispatch(
+                    addPopup({
+                        message: "No employee has been found.",
+                        duration: 5000,
+                        type: PopupTypes.INFO,
+                    })
+                )
+            }
+        } catch (error) {
+            dispatch(
+                addPopup({
+                    message: "Error filtering workers.",
+                    duration: 5000,
+                    type: PopupTypes.ERROR,
+                })
+            );
+        }
+    }
 
     const handleHireSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -193,6 +246,7 @@ const FunctionsManager: React.FC = () => {
             >
                 <MenuItem onClick={() => handleOpenDialog("delete")}>Delete by Person</MenuItem>
                 <MenuItem onClick={() => handleOpenDialog("count")}>Count by Person</MenuItem>
+                <MenuItem onClick={() => handleOpenDialog("filter")}>Filter by StartDate</MenuItem>
                 <MenuItem onClick={() => handleOpenDialog("hire")}>Hire Employee</MenuItem>
                 <MenuItem onClick={() => handleOpenDialog("adjust")}>Adjust Employee Salary</MenuItem>
             </Menu>
@@ -209,7 +263,7 @@ const FunctionsManager: React.FC = () => {
                         label="Person"
                         changeHandler={(event) => setDeletePersonId(parseInt(event.target.value as string))}
                         options={persons
-                            .filter((person) => person.creatorName === user.name)
+                            .filter((person) => person.creatorName === user.name || user.admin)
                             .map((person) => ({
                                 label: `ID: ${person.id}, Eye Color: ${person.eyeColor}, Hair Color: ${person.hairColor}, Height: ${person.height}, Nationality: ${person.nationality}`,
                                 value: person.id,
@@ -237,6 +291,39 @@ const FunctionsManager: React.FC = () => {
                             }))}
                         value={countPersonId || ""}
                     />
+                </Box>
+            </FunctionDialog>
+
+            {/* Filter by date Dialog */}
+            <FunctionDialog
+                open={filterDialogOpen}
+                setOpen={setFilterDialogOpen}
+                title="Filter by StartDate"
+                onSubmit={handleFilterSubmit}
+            >
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: "center",
+                    flexDirection: "column",
+                    width: "100%",
+                    marginTop: "3%"
+                }}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Start Date"
+                            value={dayjs(startDate, 'DD.MM.YYYY')}
+                            onChange={(newValue) => {
+                                if (newValue === null || !newValue.isValid()) {
+                                    setStartDate(null)
+                                    return
+                                }
+                                setStartDate(format(newValue.toDate(), 'dd.MM.yyyy'))
+                                setStartDateErrorMessage("")
+                            }}
+                        />
+                    </LocalizationProvider>
+                    <Typography sx={{color: "red", height: "1em"}}
+                                variant="caption">{startDateErrorMessage}</Typography>
                 </Box>
             </FunctionDialog>
 
@@ -300,6 +387,20 @@ const FunctionsManager: React.FC = () => {
                     />
                 </Box>
             </FunctionDialog>
+
+            <Dialog
+                open={openWorkersTable}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth
+                maxWidth={false}
+            >
+                <DialogTitle id="alert-dialog-title">Filtered by StartDate Workers</DialogTitle>
+                <DialogContent>
+                    <WorkersTable workers={filteredWorkers} showCreateButton={false}/>
+                </DialogContent>
+            </Dialog>
         </>
     );
 

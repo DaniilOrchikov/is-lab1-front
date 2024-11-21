@@ -2,15 +2,16 @@ import React, {useRef, useState} from "react";
 import {useAppDispatch} from "../../../store";
 import {Md5} from "ts-md5";
 import axios from "axios";
-import {auth, logout, setAdmin} from "../../slices/userSlice";
+import {auth, logout, setAdmin, setInAdminQueue} from "../../slices/userSlice";
 import {useNavigate} from "react-router-dom";
-import {Container, TextField, Button, Typography, Box, Grid, Checkbox, FormControlLabel} from '@mui/material';
+import {Container, TextField, Button, Typography, Box, Grid} from '@mui/material';
+import {adminApplicationStatus} from "../../api/userApi";
+import {configureApiWithAuth} from "../../utils/auth";
 
 const AuthorizationPage = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [registered, setRegistered] = useState(false);
-    const [adminChecked, setAdminChecked] = useState(false);
     const errorMessageRef = useRef<HTMLParagraphElement>(null);
 
     const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,36 +37,29 @@ const AuthorizationPage = () => {
             },
         });
 
-        api.post(registered ? '/signin' : '/login')
+        api.post(registered ? '/login' : '/signup')
             .then(async (response) => {
                 if (errorMessageRef.current) errorMessageRef.current.textContent = '';
                 dispatch(auth({name, password}));
-                if (response.data.admin) {
-                    dispatch(setAdmin(true))
-                    alert("You are an administrator")
-                } else if (adminChecked) {
-                    api.post('/admin_queue').then(async (response) => {
-                        if (response.status === 200) {
-                            dispatch(setAdmin(true))
-                            alert("You are an administrator")
-                        } else {
-                            alert(response.data)
-                        }
-                    })
-                }
+                configureApiWithAuth(name, password);
+                adminApplicationStatus().then((response) => {
+                    if (response.status === 'pending') {
+                        dispatch(setInAdminQueue(true))
+                    } else if (response.status === 'approved') {
+                        dispatch(setAdmin(true))
+                        dispatch(setInAdminQueue(false))
+                    }
+                })
                 navigate('/tables');
-            }).catch((error) => {
-            dispatch(logout());
-            try {
-                if (errorMessageRef.current) errorMessageRef.current.textContent = error.response.data.message as string;
-            } catch (e) {
-                if (errorMessageRef.current) errorMessageRef.current.textContent = "Sorry, server error, try again"
-            }
-        });
-    }
-
-    const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAdminChecked(event.target.checked)
+            })
+            .catch((error) => {
+                dispatch(logout());
+                try {
+                    if (errorMessageRef.current) errorMessageRef.current.textContent = error.response.data.message as string;
+                } catch (e) {
+                    if (errorMessageRef.current) errorMessageRef.current.textContent = "Sorry, server error, try again"
+                }
+            });
     }
 
     return (
@@ -93,10 +87,6 @@ const AuthorizationPage = () => {
                             name="password"
                             variant="outlined"
                         />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControlLabel control={<Checkbox onChange={handleCheckbox}/>}
-                                          label="Apply to become an administrator"/>
                     </Grid>
                     <Grid item xs={12}>
                         <Button fullWidth type="submit" variant="contained" color="primary">

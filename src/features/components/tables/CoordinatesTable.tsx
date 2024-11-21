@@ -3,7 +3,6 @@ import {RootState} from "../../../store";
 import React, {useRef} from "react";
 import {Coordinates} from "../../../types";
 import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
-import CoordinatesForm from "../forms/CoordinatesForm";
 import UpdateCoordinates from "../updates/UpdateCoordinates";
 import CreateCoordinatesButton from "../buttons/CreateCoordinatesButton";
 
@@ -16,19 +15,19 @@ const CoordinatesTable = () => {
         {
             id: 'id', numeric: true, label: 'Id',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Id")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Coordinates>,
         {
             id: 'x', numeric: true, label: 'X',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter X")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Coordinates>,
         {
             id: 'y', numeric: true, label: 'Y',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Y")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Coordinates>,
     ];
@@ -59,7 +58,6 @@ const CoordinatesTable = () => {
             />
             <UpdateCoordinates ref={refUpdateForm}/>
             <CreateCoordinatesButton/>
-            <CoordinatesForm></CoordinatesForm>
         </>
     );
 };

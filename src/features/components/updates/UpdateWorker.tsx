@@ -31,7 +31,7 @@ const UpdateWorker= forwardRef((props, ref) => {
                 dispatch(setCurrentWorkerId(id));
                 dispatch(setWorkerFormOpen(true));
                 dispatch(setWorkerFormCreatorName(worker.creatorName));
-                if (worker.creatorName == user.name){
+                if (worker.creatorName == user.name || user.admin){
                     dispatch(setWorkerFormCanUpdateObject(true))
                 }
                 else{

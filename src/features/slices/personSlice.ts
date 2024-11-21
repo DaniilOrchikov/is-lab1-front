@@ -27,6 +27,7 @@ export const updatePersonThunk = createAsyncThunk(
     async (person: Person) => {
         await updatePersonById(person);
         store.dispatch(fetchPersonsThunk());
+        store.dispatch(addPopup({message: `Person successfully updated`, duration: 5000, type: PopupTypes.SUCCESS}))
         return person;
     }
 );
@@ -36,6 +37,7 @@ export const deletePersonByIdThunk = createAsyncThunk(
     async (id: number) => {
         await deletePersonById(id);
         store.dispatch(fetchPersonsThunk());
+        store.dispatch(addPopup({message: `Person successfully deleted`, duration: 5000, type: PopupTypes.SUCCESS}))
         return id;
     }
 );

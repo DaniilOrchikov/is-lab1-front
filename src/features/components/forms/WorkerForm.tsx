@@ -111,8 +111,7 @@ const WorkerForm = () => {
                 </DialogTitle>
                 {!workerForm.canUpdateObject ?
                     <Typography sx={{marginLeft: "25px"}} variant="subtitle2">You cannot modify an object because you
-                        are not
-                        its creator.</Typography> : ""}
+                        are not its creator.</Typography> : ""}
                 <DialogContent>
                     <form onSubmit={handleAddWorker}>
                         <TextField name="name" label="Name" variant="standard" required
@@ -146,13 +145,13 @@ const WorkerForm = () => {
                                    InputProps={{inputProps: {min: 1}}}
                                    defaultValue={workerForm.valueRating}
                                    disabled={!workerForm.canUpdateObject}/>
-                        <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
+                        <Box sx={{display: 'flex', justifyContent: 'center', marginTop:"4%"}}>
                             <SelectField label="Status"
                                          value={workerForm.valueStatus}
                                          changeHandler={(event) => dispatch(setWorkerFormValueStatus(event.target.value as Status))}
                                          options={Object.values(Status).map(status => ({label: status, value: status}))}
                                          disabled={!workerForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+                                         className="select-enum"/>
                             <SelectField label="Position"
                                          value={workerForm.valuePosition}
                                          changeHandler={(event) => dispatch(setWorkerFormValuePosition(event.target.value as Position))}
@@ -161,16 +160,10 @@ const WorkerForm = () => {
                                              value: position
                                          }))}
                                          disabled={!workerForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}
+                                         className="select-enum"
                                          required={false}/>
                         </Box>
-                        <Box sx={{
-                            display: 'flex',
-                            alignItems: "center",
-                            flexDirection: "column",
-                            width: "100%",
-                            marginTop: "3%"
-                        }}>
+                        <Box className="block-column">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     label="Start Date"
@@ -186,42 +179,26 @@ const WorkerForm = () => {
                             <Typography sx={{color: "red", height: "1em"}}
                                         variant="caption">{startDateErrorMessage}</Typography>
                         </Box>
-                        <br></br>
-                        <br></br>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: "100%",
-                            flexDirection: "column",
-                        }}>
+                        <Box className="block-column">
                             {workerForm.canUpdateObject ? <CreateCoordinatesButton sx={{width: "40%"}}/> : ""}
-                            <Box sx={{minWidth: "40%", marginTop: "2%"}}>
+                            <Box className="select-object-box">
                                 <SelectField label="Coordinates"
                                              value={workerForm.valueCoordinatesId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValueCoordinatesId(parseInt(event.target.value as string)))}
-                                             options={coordinatesList.filter((coordinates) => coordinates.creatorName === user.name || coordinates.id === workerForm.valueCoordinatesId).map(coordinates => ({
+                                             options={coordinatesList.filter((coordinates) => coordinates.creatorName === user.name || coordinates.id === workerForm.valueCoordinatesId || user.admin).map(coordinates => ({
                                                  label: `${coordinates.x}; ${coordinates.y}`,
                                                  value: coordinates.id
                                              }))}
                                              disabled={!workerForm.canUpdateObject}/>
                             </Box>
                         </Box>
-                        <br></br>
-                        <br></br>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: "100%",
-                            flexDirection: "column",
-                        }}>
+                        <Box className="block-column">
                             {workerForm.canUpdateObject ? <CreateOrganizationButton sx={{width: "40%"}}/> : ""}
-                            <Box sx={{minWidth: "40%", marginTop: "2%"}}>
+                            <Box  className="select-object-box">
                                 <SelectField label="Organization"
                                              value={workerForm.valueOrganizationId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValueOrganizationId(parseInt(event.target.value as string)))}
-                                             options={organizations.filter((organization) => organization.creatorName === user.name || organization.id === workerForm.valueOrganizationId).map(organization => ({
+                                             options={organizations.filter((organization) => organization.creatorName === user.name || organization.id === workerForm.valueOrganizationId || user.admin).map(organization => ({
                                                  label: `${organization.fullName}, rating: ${organization.rating}`,
                                                  value: organization.id
                                              }))}
@@ -229,21 +206,13 @@ const WorkerForm = () => {
                                              required={false}/>
                             </Box>
                         </Box>
-                        <br></br>
-                        <br></br>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: "100%",
-                            flexDirection: "column",
-                        }}>
+                        <Box className="block-column">
                             {workerForm.canUpdateObject ? <CreatePersonButton sx={{width: "40%"}}/> : ""}
-                            <Box sx={{minWidth: "40%", marginTop: "2%"}}>
+                            <Box  className="select-object-box">
                                 <SelectField label="Person"
                                              value={workerForm.valuePersonId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValuePersonId(parseInt(event.target.value as string)))}
-                                             options={persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId).map(person => ({
+                                             options={persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId || user.admin).map(person => ({
                                                  label: `eyeColor: ${person.eyeColor}, hairColor: ${person.hairColor}, height: ${person.height}, nationality: ${person.nationality}`,
                                                  value: person.id
                                              }))}
@@ -252,7 +221,7 @@ const WorkerForm = () => {
                             </Box>
                         </Box>
 
-                        <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
+                        <Box className="buttons">
                             {workerForm.type === 'update' && workerForm.canUpdateObject ?
                                 (<Button variant="contained" color="error" sx={{marginRight: '2%'}}
                                          onClick={handleDeleteWorker}>Delete</Button>) : ""}

@@ -32,7 +32,7 @@ const UpdateOrganization= forwardRef((props, ref) => {
                 dispatch(setCurrentOrganizationId(id));
                 dispatch(setOrganizationFormOpen(true));
                 dispatch(setOrganizationFormCreatorName(organization.creatorName));
-                if (organization.creatorName == user.name){
+                if (organization.creatorName == user.name || user.admin){
                     dispatch(setOrganizationFormCanUpdateObject(true))
                 }
                 else{

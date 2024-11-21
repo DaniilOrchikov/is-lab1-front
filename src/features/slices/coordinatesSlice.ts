@@ -27,6 +27,7 @@ export const updateCoordinatesThunk = createAsyncThunk(
     async (coordinates: Coordinates) => {
         await updateCoordinatesById(coordinates);
         store.dispatch(fetchCoordinatesThunk());
+        store.dispatch(addPopup({message: `Coordinates successfully updated`, duration: 5000, type: PopupTypes.SUCCESS}))
         return coordinates;
     }
 );
@@ -36,6 +37,7 @@ export const deleteCoordinatesByIdThunk = createAsyncThunk(
     async (id: number) => {
         await deleteCoordinatesById(id);
         store.dispatch(fetchCoordinatesThunk());
+        store.dispatch(addPopup({message: `Coordinates successfully deleted`, duration: 5000, type: PopupTypes.SUCCESS}))
         return id;
     }
 );

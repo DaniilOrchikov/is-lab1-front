@@ -23,7 +23,6 @@ import {
     setOrganizationFormValueFullName,
     setOrganizationFormValueRating,
     setOrganizationFormValueAnnualTurnover,
-    setOrganizationFormValueEmployeesCount
 } from "../../slices/formSlices/organizationFormSlice";
 import {addPopup} from "../../slices/popupSlice";
 import CreateAddressButton from "../buttons/CreateAddressButton";
@@ -102,7 +101,7 @@ const OrganizationForm = () => {
                     </Typography> : ""}
                 <DialogContent>
                     <form onSubmit={handleAddOrganization}>
-                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                        <Box className="block">
                             <TextField name="fullName" label="Full Name" variant="standard"
                                        onChange={(event) => {
                                            setNameErrorMessage("")
@@ -111,11 +110,11 @@ const OrganizationForm = () => {
                                        value={organizationForm.valueFullName}
                                        disabled={!organizationForm.canUpdateObject}/>
                         </Box>
-                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                        <Box className="block">
                             <Typography sx={{color: "red", height: "1em"}}
                                         variant="caption">{nameErrorMessage}</Typography>
                         </Box>
-                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                        <Box className="block">
 
                             <TextField name="rating" label="Rating" variant="standard"
                                        onChange={(event) => {
@@ -149,25 +148,7 @@ const OrganizationForm = () => {
                                        InputProps={{inputProps: {min: 1}}}
                                        disabled={!organizationForm.canUpdateObject}/>
                         </Box>
-                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
-
-                            <TextField name="employeesCount" label="Employees Count" variant="standard"
-                                       onChange={(event) => {
-                                           const value = parseInt(event.target.value, 10);
-                                           if (!isNaN(value)) {
-                                               dispatch(setOrganizationFormValueEmployeesCount(parseInt(event.target.value)))
-                                           } else {
-                                               dispatch(setOrganizationFormValueEmployeesCount(null))
-                                           }
-                                       }}
-                                       sx={{marginTop: "5%"}}
-                                       type={'number'}
-                                       required
-                                       defaultValue={organizationForm.valueEmployeesCount}
-                                       InputProps={{inputProps: {min: 1}}}
-                                       disabled={!organizationForm.canUpdateObject}/>
-                        </Box>
-                        <Box sx={{width: "100%", display: 'flex', justifyContent: 'center'}}>
+                        <Box className="block" sx={{marginTop:"4%"}}>
                             <SelectField label="Type"
                                          value={organizationForm.valueType}
                                          changeHandler={(event) => dispatch(setOrganizationFormValueType(event.target.value as OrganizationType))}
@@ -176,30 +157,22 @@ const OrganizationForm = () => {
                                              value: type
                                          }))}
                                          disabled={!organizationForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "4%", marginLeft: "3%"}}/>
+                                         className="select-enum"/>
                         </Box>
-                        <br></br>
-                        <br></br>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: "100%",
-                            flexDirection: "column",
-                        }}>
+                        <Box className="block-column">
                             {organizationForm.canUpdateObject ? <CreateAddressButton sx={{width: "40%"}}/> : ""}
                             <Box sx={{minWidth: "40%", marginTop: "4%"}}>
                                 <SelectField label="Address"
                                              value={organizationForm.valueAddressId || ''}
                                              changeHandler={(event) => dispatch(setOrganizationFormValueAddressId(parseInt(event.target.value as string)))}
-                                             options={addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId).map(address => ({
+                                             options={addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId || user.admin).map(address => ({
                                                  label: `${address.street}, zipCode: ${address.zipCode}`,
                                                  value: address.id
                                              }))}
                                              disabled={!organizationForm.canUpdateObject}/>
                             </Box>
                         </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
+                        <Box className="buttons">
                             {organizationForm.type === 'update' && organizationForm.canUpdateObject ?
                                 (<Button variant="contained" color="error" sx={{marginRight: '2%'}}
                                          onClick={handleDeleteOrganization}>Delete</Button>) : ""}

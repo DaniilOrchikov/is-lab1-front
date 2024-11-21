@@ -28,6 +28,7 @@ export const updateOrganizationThunk = createAsyncThunk(
     async (organization: Organization) => {
         await updateOrganizationById(organization);
         store.dispatch(fetchOrganizationsThunk());
+        store.dispatch(addPopup({message: `Organization successfully updated`, duration: 5000, type: PopupTypes.SUCCESS}))
         return organization;
     }
 );
@@ -36,6 +37,7 @@ export const deleteOrganizationByIdThunk = createAsyncThunk(
     async (id: number) => {
         await deleteOrganizationById(id);
         store.dispatch(fetchOrganizationsThunk());
+        store.dispatch(addPopup({message: `Organization successfully deleted`, duration: 5000, type: PopupTypes.SUCCESS}))
         return id;
     }
 );

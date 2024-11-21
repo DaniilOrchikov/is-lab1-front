@@ -8,11 +8,12 @@ interface SelectFieldProps {
     options: { label: string; value: string | number }[];
     disabled?: boolean;
     style?: any;
-    required?:boolean
+    required?:boolean;
+    className?:string
 }
 
-const SelectField: React.FC<SelectFieldProps> = ({label, value, changeHandler, options, disabled = false, style, required=true}) => (
-    <FormControl variant="outlined" fullWidth sx={style}>
+const SelectField: React.FC<SelectFieldProps> = ({label, value, changeHandler, options, disabled = false, style, required=true, className=""}) => (
+    <FormControl variant="outlined" fullWidth sx={style} className={className}>
         <InputLabel>{label}</InputLabel>
         <Select
             value={value}

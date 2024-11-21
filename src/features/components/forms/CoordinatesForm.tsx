@@ -99,7 +99,7 @@ const CoordinatesForm = () => {
                                        InputProps={{inputProps: {max: 916}}}
                                        disabled={!coordinatesForm.canUpdateObject}/>
                         </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
+                        <Box className="buttons">
                             {coordinatesForm.type === 'update' && coordinatesForm.canUpdateObject ?
                                 (<Button variant="contained" color="error" sx={{marginRight: '2%'}}
                                          onClick={handleDeleteCoordinates}>Delete</Button>) : ""}

@@ -9,7 +9,8 @@ export const fetchWorkersThunk = createAsyncThunk('workers/fetchWorkers', async 
     return (await fetchWorkers()).map((worker) => {
         return {
             ...worker,
-            creationDate: format(new Date(worker.creationDate), 'dd.MM.yyyy')
+            creationDate: format(new Date(worker.creationDate), 'dd.MM.yyyy'),
+            startDate: format(new Date(worker.startDate), 'dd.MM.yyyy')
         }
     });
 });
@@ -29,6 +30,7 @@ export const updateWorkerThunk = createAsyncThunk(
     async (worker: Worker) => {
         await updateWorkerById(worker);
         store.dispatch(fetchWorkersThunk());
+        store.dispatch(addPopup({message: `Worker successfully updated`, duration: 5000, type: PopupTypes.SUCCESS}))
         return worker;
     }
 );
@@ -38,6 +40,7 @@ export const deleteWorkerByIdThunk = createAsyncThunk(
     async (id: number) => {
         await deleteWorkerById(id);
         store.dispatch(fetchWorkersThunk());
+        store.dispatch(addPopup({message: `Worker successfully deleted`, duration: 5000, type: PopupTypes.SUCCESS}))
         return id;
     }
 );

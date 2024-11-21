@@ -28,6 +28,7 @@ export const updateAddressThunk = createAsyncThunk(
     async (address: Address) => {
         await updateAddressById(address);
         store.dispatch(fetchAddressesThunk());
+        store.dispatch(addPopup({message: `Address successfully updated`, duration: 5000, type: PopupTypes.SUCCESS}));
         return address;
     }
 );
@@ -37,6 +38,7 @@ export const deleteAddressByIdThunk = createAsyncThunk(
     async (id: number) => {
         await deleteAddressById(id);
         store.dispatch(fetchAddressesThunk());
+        store.dispatch(addPopup({message: `Address successfully deleted`, duration: 5000, type: PopupTypes.SUCCESS}));
         return id;
     }
 );

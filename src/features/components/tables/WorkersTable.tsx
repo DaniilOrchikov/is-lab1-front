@@ -3,9 +3,8 @@ import {RootState} from "../../../store";
 import React, {useRef} from "react";
 import {compareCoordinates, Position, Status, Worker} from "../../../types";
 import UniversalTable, {HeadCell, standardFilterField} from "./UniversalTable";
-import WorkerForm from "../forms/WorkerForm";
 import UpdateWorker from "../updates/UpdateWorker"
-import {MenuItem, Select} from "@mui/material";
+import {Box, MenuItem, Select} from "@mui/material";
 import CreateWorkerButton from "../buttons/CreateWorkerButton";
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {LocalizationProvider} from "@mui/x-date-pickers";
@@ -18,9 +17,12 @@ function parseDate(dateString: string): Date {
     return new Date(year, month - 1, day);
 }
 
+interface WorkersTableProps {
+    workers: Worker[]
+    showCreateButton?: boolean
+}
 
-const WorkersTable = () => {
-    const workers = useSelector((state: RootState) => state.workers);
+const WorkersTable = ({workers, showCreateButton = true}: WorkersTableProps) => {
     const coordinatesList = useSelector((state: RootState) => state.coordinatesList);
     const organizations = useSelector((state: RootState) => state.organizations);
     const persons = useSelector((state: RootState) => state.persons);
@@ -33,7 +35,7 @@ const WorkersTable = () => {
             numeric: true,
             label: 'Id',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Id")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Worker>,
         {
@@ -41,7 +43,7 @@ const WorkersTable = () => {
             numeric: false,
             label: 'Name',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Name")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Worker>,
         {
@@ -49,7 +51,7 @@ const WorkersTable = () => {
             numeric: true,
             label: 'Salary',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Salary")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Worker>,
         {
@@ -209,9 +211,9 @@ const WorkersTable = () => {
             }
             return 0;
         }
-        if (orderBy === 'creationDate') {
-            const date1 = parseDate(a.creationDate);
-            const date2 = parseDate(b.creationDate);
+        if (orderBy === 'creationDate' || orderBy === 'startDate') {
+            const date1 = parseDate(a[orderBy]);
+            const date2 = parseDate(b[orderBy]);
             const comparisonResult = compareAsc(date1, date2);
             if (comparisonResult > 0) {
                 return 1
@@ -254,6 +256,7 @@ const WorkersTable = () => {
 
     return (
         <>
+            <Box sx={{width: "1640px"}}>
             <UniversalTable
                 data={workers}
                 headCells={headCells}
@@ -261,9 +264,9 @@ const WorkersTable = () => {
                 formatCellData={formatCellData}
                 updateRef={refUpdateForm}
             />
+            </Box>
             <UpdateWorker ref={refUpdateForm}/>
-            <CreateWorkerButton/>
-            <WorkerForm></WorkerForm>
+            {showCreateButton ? <CreateWorkerButton/> : ""}
         </>
     );
 };

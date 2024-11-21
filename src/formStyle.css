@@ -1,0 +1,32 @@
+.select-enum {
+    width: 150px !important;
+    margin-top: 1.5% !important;
+    margin-left: 1.5% !important;
+    margin-right: 1.5% !important;
+}
+
+.select-object-box{
+    min-width: 40%;
+    margin-top: 2%;
+}
+
+.block-column{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    margin-top:8%;
+}
+
+.buttons{
+    display: flex;
+    justify-content: center;
+    margin-top: 4%
+}
+
+.block{
+    width: 100%;
+    display: flex;
+    justify-content: center
+}

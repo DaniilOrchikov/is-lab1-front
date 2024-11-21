@@ -17,13 +17,15 @@ import {
     setPersonFormOpen,
     resetPersonForm,
     setPersonFormValueEyeColor,
-    setPersonFormValueNationality, setPersonFormValueHeight, setPersonFormValueHairColor
+    setPersonFormValueNationality, setPersonFormValueHeight, setPersonFormValueHairColor, setPersonFormValueLocationId
 } from '../../slices/formSlices/personFormSlice';
 import SelectField from "./SelectField";
+import CreateLocationButton from "../buttons/CreateLocationButton";
 
 
 const PersonForm = () => {
     const personForm = useSelector((state: RootState) => state.personForm);
+    const locations = useSelector((state: RootState) => state.locations);
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.user);
 
@@ -42,6 +44,7 @@ const PersonForm = () => {
             hairColor: personForm.valueHairColor,
             height: personForm.valueHeight,
             nationality: personForm.valueNationality,
+            locationId: personForm.valueLocationId,
             creatorName: user.name
         } as Person;
         if (personForm.type === 'update') {
@@ -75,13 +78,13 @@ const PersonForm = () => {
                         are not its creator.</Typography> : ""}
                 <DialogContent>
                     <form onSubmit={handleAddPerson}>
-                        <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
+                        <Box className="block">
                             <SelectField label="Eye Color"
                                          value={personForm.valueEyeColor}
                                          changeHandler={(event) => dispatch(setPersonFormValueEyeColor(event.target.value as Color))}
                                          options={Object.values(Color).map(color => ({label: color, value: color}))}
                                          disabled={!personForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}
+                                         className="select-enum"
                                          required={false}/>
 
                             <SelectField label="Hair Color"
@@ -89,7 +92,7 @@ const PersonForm = () => {
                                          changeHandler={(event) => dispatch(setPersonFormValueHairColor(event.target.value as Color))}
                                          options={Object.values(Color).map(color => ({label: color, value: color}))}
                                          disabled={!personForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}
+                                         className="select-enum"
                                          required={false}/>
 
                             <SelectField label="Nationality"
@@ -100,9 +103,10 @@ const PersonForm = () => {
                                              value: country
                                          }))}
                                          disabled={!personForm.canUpdateObject}
-                                         style={{width: 150, marginTop: "3%", marginLeft: "3%"}}/>
+                                         className="select-enum"
+                            />
                         </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
+                        <Box className="block">
                             <TextField name="height" label="Height" variant="standard"
                                        type={'number'}
                                        defaultValue={personForm.valueHeight}
@@ -118,7 +122,20 @@ const PersonForm = () => {
                                        InputProps={{inputProps: {min: 1}}}
                                        disabled={!personForm.canUpdateObject}/>
                         </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
+                        <Box className="block-column">
+                            {personForm.canUpdateObject ? <CreateLocationButton sx={{width: "40%"}}/> : ""}
+                            <Box className="select-object-box">
+                                <SelectField label="Location"
+                                             value={personForm.valueLocationId || ''}
+                                             changeHandler={(event) => dispatch(setPersonFormValueLocationId(parseInt(event.target.value as string)))}
+                                             options={locations.filter((location) => location.creatorName === user.name || location.id === personForm.valueLocationId || user.admin).map(location => ({
+                                                 label: `${location.name}: (${location.x}; ${location.y}; ${location.z})`,
+                                                 value: location.id
+                                             }))}
+                                             disabled={!personForm.canUpdateObject}/>
+                            </Box>
+                        </Box>
+                        <Box className="buttons">
                             {personForm.type === 'update' && personForm.canUpdateObject ?
                                 (<Button variant="contained" color="error" sx={{marginRight: '2%'}}
                                          onClick={handleDeletePerson}>Delete</Button>) : ""}

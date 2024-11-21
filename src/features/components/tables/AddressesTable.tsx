@@ -18,7 +18,7 @@ const AddressesTable = () => {
             numeric: true,
             label: 'Id',
             filterComponent: ({ value, onChange }) => {
-                return standardFilterField({ value, onChange }, "Filter Id");
+                return standardFilterField({ value, onChange });
             }
         },
         {
@@ -26,7 +26,7 @@ const AddressesTable = () => {
             numeric: false,
             label: 'Street',
             filterComponent: ({ value, onChange }) => {
-                return standardFilterField({ value, onChange }, "Filter Street");
+                return standardFilterField({ value, onChange });
             }
         },
         {
@@ -34,7 +34,7 @@ const AddressesTable = () => {
             numeric: false,
             label: 'Zip Code',
             filterComponent: ({ value, onChange }) => {
-                return standardFilterField({ value, onChange }, "Filter Zip Code");
+                return standardFilterField({ value, onChange });
             }
         }
     ];
@@ -64,7 +64,6 @@ const AddressesTable = () => {
             />
             <UpdateAddress ref={refUpdateForm} />
             <CreateAddressButton />
-            <AddressForm />
         </>
     );
 };

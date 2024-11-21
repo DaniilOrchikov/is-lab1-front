@@ -6,7 +6,7 @@ const organizationFormSlice = createSlice({
     initialState: {
         open: false,
         valueAnnualTurnover: null,
-        valueEmployeesCount: null,
+        valueEmployeesCount: 0,
         valueFullName: "",
         valueRating: null,
         valueType: "",
@@ -18,7 +18,7 @@ const organizationFormSlice = createSlice({
     } as {
         open: boolean,
         valueAnnualTurnover: number | null,
-        valueEmployeesCount: number | null,
+        valueEmployeesCount: number,
         valueFullName: string,
         valueRating: number | null,
         valueType: OrganizationType | string
@@ -35,7 +35,7 @@ const organizationFormSlice = createSlice({
         setOrganizationFormValueAnnualTurnover: (state, action: PayloadAction<number | null>) => {
             state.valueAnnualTurnover = action.payload;
         },
-        setOrganizationFormValueEmployeesCount: (state, action: PayloadAction<number | null>) => {
+        setOrganizationFormValueEmployeesCount: (state, action: PayloadAction<number>) => {
             state.valueEmployeesCount = action.payload;
         },
         setOrganizationFormValueFullName: (state, action: PayloadAction<string>) => {
@@ -66,7 +66,7 @@ const organizationFormSlice = createSlice({
             return {
                 open: state.open,
                 valueAnnualTurnover: null,
-                valueEmployeesCount: null,
+                valueEmployeesCount: 0,
                 valueFullName: "",
                 valueRating: null,
                 valueType: "",

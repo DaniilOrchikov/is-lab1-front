@@ -88,7 +88,7 @@ const AddressForm = () => {
                                        onChange={(event) => dispatch(setAddressFormValueZipCode(event.target.value))}
                                        disabled={!addressForm.canUpdateObject} />
                         </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'right', marginTop: '4%'}}>
+                        <Box className="buttons">
                             {addressForm.type === 'update' && addressForm.canUpdateObject ?
                                 (<Button variant="contained" color="error" sx={{marginRight: '2%'}}
                                          onClick={handleDelete}>Delete</Button>) : ""}

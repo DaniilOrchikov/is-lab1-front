@@ -10,8 +10,10 @@ import workerFormReducer from './features/slices/formSlices/workerFormSlice';
 import userReducer from './features/slices/userSlice';
 import organizationReducer from "./features/slices/organizationSlice";
 import personReducer from "./features/slices/personSlice";
+import locationReducer from "./features/slices/locationSlice";
 import organizationFormReducer from "./features/slices/formSlices/organizationFormSlice";
 import personFormReducer from "./features/slices/formSlices/personFormSlice";
+import locationFormReducer from "./features/slices/formSlices/locationFormSlice";
 import addressReducer from './features/slices/addressSlice';
 import addressFormReducer from './features/slices/formSlices/addressFormSlice';
 
@@ -28,12 +30,14 @@ const store = configureStore({
         workers: workerReducer,
         organizations: organizationReducer,
         persons: personReducer,
+        locations: locationReducer,
         popups: popupReducer,
         coordinatesList: coordinatesReducer,
         coordinatesForm: coordinatesFormReducer,
         organizationForm: organizationFormReducer,
         workerForm: workerFormReducer,
         personForm: personFormReducer,
+        locationForm: locationFormReducer,
         user: persistedUserReducer,
         addresses: addressReducer,
         addressForm: addressFormReducer,

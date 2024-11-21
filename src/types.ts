@@ -40,7 +40,7 @@ export interface Person {
     id: number
     eyeColor: Color;
     hairColor: Color;
-    // locationId: number;
+    locationId: number;
     height: number;
     nationality: Country;
     creatorName: string;
@@ -63,39 +63,39 @@ export interface Location {
 }
 
 export enum Position {
-    DIRECTOR = 'Director',
-    LEAD_DEVELOPER = 'Lead Developer',
-    BAKER = 'Baker',
-    CLEANER = "Cleaner"
+    DIRECTOR = 'DIRECTOR',
+    LEAD_DEVELOPER = 'LEAD_DEVELOPER',
+    BAKER = 'BAKER',
+    CLEANER = 'CLEANER'
 }
 
 export enum Status {
-    FIRED = 'Fired',
-    RECOMMENDED_FOR_PROMOTION = 'Recommended for Promotion',
-    REGULAR = 'Regular',
-    PROBATION = 'Probation'
+    FIRED = 'FIRED',
+    RECOMMENDED_FOR_PROMOTION = 'RECOMMENDED_FOR_PROMOTION',
+    REGULAR = 'REGULAR',
+    PROBATION = 'PROBATION'
 }
 
 export enum OrganizationType {
-    COMMERCIAL = 'Commercial',
-    PUBLIC = 'Public',
-    PRIVATE_LIMITED_COMPANY = 'Private Limited Company',
-    OPEN_JOINT_STOCK_COMPANY = 'Open Joint Stock Company',
+    COMMERCIAL = 'COMMERCIAL',
+    PUBLIC = 'PUBLIC',
+    PRIVATE_LIMITED_COMPANY = 'PRIVATE_LIMITED_COMPANY',
+    OPEN_JOINT_STOCK_COMPANY = 'OPEN_JOINT_STOCK_COMPANY',
 }
 
 export enum Color {
-    RED = "Red",
-    BLACK = "Black",
-    ORANGE = "Orange",
-    BROWN = "Brown"
+    RED = 'RED',
+    BLACK = 'BLACK',
+    ORANGE = 'ORANGE',
+    BROWN = 'BROWN'
 }
 
 export enum Country {
-    GERMANY = "Germany",
-    FRANCE = "France",
-    CHINA = "China",
-    INDIA = "India",
-    JAPAN = "Japan"
+    GERMANY = 'GERMANY',
+    FRANCE = 'FRANCE',
+    CHINA = 'CHINA',
+    INDIA = 'INDIA',
+    JAPAN = 'JAPAN'
 }
 
 export enum PopupTypes {

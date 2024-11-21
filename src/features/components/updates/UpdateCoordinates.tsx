@@ -21,7 +21,7 @@ const UpdateCoordinates = forwardRef((props, ref) => {
                 dispatch(setCoordinatesFormType('update'));
                 dispatch(setCurrentCoordinatesId(id));
                 dispatch(setCoordinatesFormOpen(true));
-                if (coordinates.creatorName == user.name){
+                if (coordinates.creatorName == user.name || user.admin){
                     dispatch(setCoordinatesFormCanUpdateObject(true))
                 }
                 else{

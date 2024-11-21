@@ -3,7 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const coordinatesFormSlice = createSlice({
     name: 'coordinatesForm',
-    initialState: {open: false, type: 'create', currentCoordinatesId: -1, canUpdateObject: false} as {
+    initialState: {open: false, valueX:null, valueY:null, type: 'create', currentCoordinatesId: -1, canUpdateObject: false} as {
         open: boolean,
         valueX: number | null,
         valueY: number | null,

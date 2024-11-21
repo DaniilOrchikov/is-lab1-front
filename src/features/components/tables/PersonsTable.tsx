@@ -10,6 +10,7 @@ import CreatePersonButton from "../buttons/CreatePersonButton";
 
 const PersonTable = () => {
     const persons = useSelector((state: RootState) => state.persons);
+    const locations = useSelector((state: RootState) => state.locations);
 
     const refUpdateForm = useRef<{ handleClickOpen: (id: number) => void } | null>(null);
 
@@ -17,7 +18,7 @@ const PersonTable = () => {
         {
             id: 'id', numeric: true, label: 'Id',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Id")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Person>,
         {
@@ -61,7 +62,7 @@ const PersonTable = () => {
             numeric: true,
             label: 'Height',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Height")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Person>,
         {
@@ -82,6 +83,24 @@ const PersonTable = () => {
                 </Select>
             )
         } as HeadCell<Person>,
+        {
+            id: 'locationId', numeric: false, label: 'Location',
+            filterComponent: ({value, onChange}) => (
+                <Select
+                    variant="standard"
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    sx={{width: 120}}
+                >
+                    <MenuItem value="">All</MenuItem>
+                    {locations.map((location) => (
+                        <MenuItem key={location.id} value={location.id}>
+                            {`${location.name}: (${location.x}; ${location.y}; ${location.z})`}
+                        </MenuItem>
+                    ))}
+                </Select>
+            )
+        } as HeadCell<Person>,
     ];
 
     const comparePerson = (a: Person, b: Person, orderBy: keyof Person) => {
@@ -95,6 +114,10 @@ const PersonTable = () => {
     };
 
     const formatCellData = (columnId: keyof Person, data: Person[keyof Person]) => {
+        if (columnId === 'locationId') {
+            const location = locations.find(location => location.id === data as number);
+            return location ? location.name : null;
+        }
         return data;
     };
 
@@ -109,7 +132,6 @@ const PersonTable = () => {
             />
             <UpdatePerson ref={refUpdateForm}/>
             <CreatePersonButton/>
-            <PersonForm></PersonForm>
         </>
     );
 };

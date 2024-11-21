@@ -20,7 +20,7 @@ const UpdateAddress = forwardRef((props, ref) => {
                 dispatch(setAddressFormType('update'));
                 dispatch(setCurrentAddressId(id));
                 dispatch(setAddressFormOpen(true));
-                if (address.creatorName == user.name){
+                if (address.creatorName == user.name || user.admin){
                     dispatch(setAddressFormCanUpdateObject(true))
                 }
                 else{

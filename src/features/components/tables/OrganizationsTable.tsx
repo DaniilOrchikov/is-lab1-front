@@ -18,7 +18,7 @@ const OrganizationsTable = () => {
         {
             id: 'id', numeric: true, label: 'Id',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Id")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Organization>,
         {
@@ -42,25 +42,25 @@ const OrganizationsTable = () => {
         {
             id: 'annualTurnover', numeric: true, label: 'Aannual Turnover',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Aannual Turnover")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Organization>,
         {
             id: 'employeesCount', numeric: true, label: 'Employees Count',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Employees Count")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Organization>,
         {
             id: 'fullName', numeric: false, label: 'Full Name',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Full Name")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Organization>,
         {
             id: 'rating', numeric: true, label: 'Rating',
             filterComponent: ({value, onChange}) => {
-                return standardFilterField({value, onChange}, "Filter Rating")
+                return standardFilterField({value, onChange})
             }
         } as HeadCell<Organization>,
         {
@@ -113,7 +113,6 @@ const OrganizationsTable = () => {
             />
             <UpdateOrganization ref={refUpdateForm}/>
             <CreateOrganizationButton/>
-            <OrganizationForm></OrganizationForm>
         </>
     );
 };

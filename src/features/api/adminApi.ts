@@ -1,14 +1,16 @@
 import api from './index';
 
-export const fetchAdminsQuery = async (): Promise<string[]> => {
-    const response = await api.get('/admin_queue');
+export const fetchAdminApplications = async (): Promise<{ id:number, userName: string}[]> => {
+    const response = await api.get('/admin/applications');
     return response.data;
 };
 
-export const addAdmin = async (name: string): Promise<void> => {
-    await api.post('/admin', { name });
+export const approveAdminApplication = async (applicationId: number): Promise<number> => {
+    const response =  await api.post(`/admin/applications/${applicationId}/approve`);
+    return response.status
 };
 
-export const deleteAdmin = async (name: string): Promise<void> => {
-    await api.delete(`/admin_queue/${name}`);
+export const rejectAdminApplication = async (applicationId: number): Promise<number> => {
+    const response =  await api.post(`/admin/applications/${applicationId}/reject`);
+    return response.status
 };
