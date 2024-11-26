@@ -19,7 +19,7 @@ const PopupManager = () => {
 
 
     return (
-        <Box sx={{position: 'absolute', top: '10%', right: '1%', marginRight: '2%', width: '15%'}}>
+        <Box sx={{position: 'absolute', top: '10%', right: '1%', marginRight: '2%', width: '15%', zIndex:15}}>
             {popups.map(popup => <Alert variant="filled" key={popup.id} sx={{margin: '1%', width: '100%'}}
                                         severity={
                                             popup.type === PopupTypes.ERROR ? 'error' :

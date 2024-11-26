@@ -165,7 +165,7 @@ const OrganizationForm = () => {
                                 <SelectField label="Address"
                                              value={organizationForm.valueAddressId || ''}
                                              changeHandler={(event) => dispatch(setOrganizationFormValueAddressId(parseInt(event.target.value as string)))}
-                                             options={addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId || user.admin).map(address => ({
+                                             options={addresses.filter((address) => address.creatorName === user.name || address.id === organizationForm.valueAddressId).map(address => ({
                                                  label: `${address.street}, zipCode: ${address.zipCode}`,
                                                  value: address.id
                                              }))}

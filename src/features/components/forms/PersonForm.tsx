@@ -128,7 +128,7 @@ const PersonForm = () => {
                                 <SelectField label="Location"
                                              value={personForm.valueLocationId || ''}
                                              changeHandler={(event) => dispatch(setPersonFormValueLocationId(parseInt(event.target.value as string)))}
-                                             options={locations.filter((location) => location.creatorName === user.name || location.id === personForm.valueLocationId || user.admin).map(location => ({
+                                             options={locations.filter((location) => location.creatorName === user.name || location.id === personForm.valueLocationId).map(location => ({
                                                  label: `${location.name}: (${location.x}; ${location.y}; ${location.z})`,
                                                  value: location.id
                                              }))}

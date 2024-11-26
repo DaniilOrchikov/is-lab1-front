@@ -12,6 +12,10 @@ import {
     TextField,
 } from "@mui/material";
 import {visuallyHidden} from '@mui/utils';
+import {useSelector} from "react-redux";
+import store, {RootState} from "../../../store";
+import {addPopup} from "../../slices/popupSlice";
+import {PopupTypes} from "../../../types";
 
 type Order = 'asc' | 'desc';
 
@@ -88,7 +92,7 @@ interface UniversalTableProps<T> {
     updateRef: React.RefObject<{ handleClickOpen: (id: number) => void }>;
 }
 
-const UniversalTable = <T extends { id: number }>({
+const UniversalTable = <T extends { id: number, creatorName:string }>({
                                                       data,
                                                       headCells,
                                                       comparator,
@@ -102,6 +106,8 @@ const UniversalTable = <T extends { id: number }>({
     const [page, setPage] = React.useState(0);
 
     const [filterValues, setFilterValues] = React.useState<{ [key in keyof T]?: any }>({});
+    const user = useSelector((state: RootState) => state.user);
+
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -151,6 +157,21 @@ const UniversalTable = <T extends { id: number }>({
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
     const handleUpdateItem = (id: number) => {
+        if (!user.admin) {
+            const object = visibleRows.find(object => object.id === id)
+            if (object === undefined) {
+                store.dispatch(addPopup({message: `Object wasn't found`, duration: 5000, type: PopupTypes.ERROR}))
+                return
+            }
+            if (user.name === object.creatorName){
+                if (updateRef.current) {
+                    updateRef.current.handleClickOpen(id);
+                }
+            }else{
+                store.dispatch(addPopup({message: `You don't have access to this object`, duration: 5000, type: PopupTypes.INFO}))
+                return
+            }
+        }
         if (updateRef.current) {
             updateRef.current.handleClickOpen(id);
         }

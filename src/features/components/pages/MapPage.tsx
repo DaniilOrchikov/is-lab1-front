@@ -26,8 +26,6 @@ const getColorForCreator = (() => {
         '#33FF57',
         '#3357FF',
         '#F333FF',
-        '#33FFF3',
-        '#F3FF33',
         '#FF8C33',
         '#8C33FF',
         '#33FF8C',
@@ -146,8 +144,8 @@ const MapPage: React.FC = () => {
         const effectiveContentWidth = contentWidth === 0 ? 1 : contentWidth;
         const effectiveContentHeight = contentHeight === 0 ? 1 : contentHeight;
 
-        const scaleX = Math.min(1, availableWidth / effectiveContentWidth);
-        const scaleY = Math.min(1, availableHeight / effectiveContentHeight);
+        const scaleX = availableWidth / effectiveContentWidth;
+        const scaleY = availableHeight / effectiveContentHeight;
 
         return {scaleX, scaleY};
     }, [minX, minY, maxX, maxY, containerSize]);

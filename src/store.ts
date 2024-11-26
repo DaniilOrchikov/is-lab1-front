@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { useDispatch } from 'react-redux';
-import workerReducer from './features/slices/workersSlice';
+import workerReducer from './features/slices/workerSlice';
 import popupReducer from './features/slices/popupSlice';
 import coordinatesReducer from './features/slices/coordinatesSlice';
 import coordinatesFormReducer from './features/slices/formSlices/coordinatesFormSlice';

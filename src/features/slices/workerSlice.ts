@@ -7,6 +7,7 @@ import {format} from 'date-fns';
 
 export const fetchWorkersThunk = createAsyncThunk('workers/fetchWorkers', async () => {
     return (await fetchWorkers()).map((worker) => {
+        console.log(worker)
         return {
             ...worker,
             creationDate: format(new Date(worker.creationDate), 'dd.MM.yyyy'),
@@ -46,7 +47,7 @@ export const deleteWorkerByIdThunk = createAsyncThunk(
 );
 
 
-const workersSlice = createSlice({
+const workerSlice = createSlice({
     name: 'workers',
     initialState: [] as Worker[],
     reducers: {},
@@ -74,4 +75,4 @@ const workersSlice = createSlice({
 });
 
 
-export default workersSlice.reducer;
+export default workerSlice.reducer;

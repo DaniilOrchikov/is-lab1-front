@@ -4,7 +4,7 @@ import {useEffect} from "react";
 import {configureApiWithAuth} from "../utils/auth";
 import {fetchCoordinatesThunk} from "../slices/coordinatesSlice";
 import {fetchOrganizationsThunk} from "../slices/organizationSlice";
-import {fetchWorkersThunk} from "../slices/workersSlice";
+import {fetchWorkersThunk} from "../slices/workerSlice";
 import {fetchPersonsThunk} from "../slices/personSlice";
 import {fetchAddressesThunk} from "../slices/addressSlice";
 import {fetchLocationsThunk} from "../slices/locationSlice";

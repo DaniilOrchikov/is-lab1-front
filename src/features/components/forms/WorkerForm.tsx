@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {RootState, useAppDispatch} from "../../../store";
 import {
     createWorkerThunk, deleteWorkerByIdThunk, updateWorkerThunk
-} from '../../slices/workersSlice';
+} from '../../slices/workerSlice';
 import {Position, Status, Worker} from '../../../types';
 import Button from '@mui/material/Button';
 import {
@@ -185,7 +185,7 @@ const WorkerForm = () => {
                                 <SelectField label="Coordinates"
                                              value={workerForm.valueCoordinatesId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValueCoordinatesId(parseInt(event.target.value as string)))}
-                                             options={coordinatesList.filter((coordinates) => coordinates.creatorName === user.name || coordinates.id === workerForm.valueCoordinatesId || user.admin).map(coordinates => ({
+                                             options={coordinatesList.filter((coordinates) => coordinates.creatorName === user.name || coordinates.id === workerForm.valueCoordinatesId  || (user.admin && coordinates.creatorName === workerForm.creatorName)).map(coordinates => ({
                                                  label: `${coordinates.x}; ${coordinates.y}`,
                                                  value: coordinates.id
                                              }))}
@@ -198,7 +198,7 @@ const WorkerForm = () => {
                                 <SelectField label="Organization"
                                              value={workerForm.valueOrganizationId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValueOrganizationId(parseInt(event.target.value as string)))}
-                                             options={organizations.filter((organization) => organization.creatorName === user.name || organization.id === workerForm.valueOrganizationId || user.admin).map(organization => ({
+                                             options={organizations.filter((organization) => organization.creatorName === user.name || organization.id === workerForm.valueOrganizationId || (user.admin && organization.creatorName === workerForm.creatorName)).map(organization => ({
                                                  label: `${organization.fullName}, rating: ${organization.rating}`,
                                                  value: organization.id
                                              }))}
@@ -212,7 +212,7 @@ const WorkerForm = () => {
                                 <SelectField label="Person"
                                              value={workerForm.valuePersonId || ''}
                                              changeHandler={(event) => dispatch(setWorkerFormValuePersonId(parseInt(event.target.value as string)))}
-                                             options={persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId || user.admin).map(person => ({
+                                             options={persons.filter((person) => person.creatorName === user.name || person.id === workerForm.valuePersonId || (user.admin && person.creatorName === workerForm.creatorName)).map(person => ({
                                                  label: `eyeColor: ${person.eyeColor}, hairColor: ${person.hairColor}, height: ${person.height}, nationality: ${person.nationality}`,
                                                  value: person.id
                                              }))}
