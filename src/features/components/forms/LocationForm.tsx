@@ -58,7 +58,7 @@ const LocationForm = () => {
                 y: locationForm.valueY,
                 z: locationForm.valueZ,
                 name: locationForm.valueName,
-                creatorName: user.name
+                creatorName: locationForm.creatorName
             } as Location;
             if (locationForm.type === 'update') {
                 dispatch(updateLocationThunk(location));

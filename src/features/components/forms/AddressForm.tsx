@@ -40,8 +40,8 @@ const AddressForm = () => {
             id: addressForm.currentAddressId,
             street: addressForm.valueStreet,
             zipCode: addressForm.valueZipCode,
-            creatorName: user.name
-        };
+            creatorName: addressForm.creatorName
+        } as Address;
 
         if (addressForm.type === 'update') {
             dispatch(updateAddressThunk(address));

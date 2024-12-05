@@ -8,11 +8,9 @@ import {format} from 'date-fns';
 export const fetchWorkersThunk = createAsyncThunk('workers/fetchWorkers', async () => {
     return (await fetchWorkers()).map((worker) => {
         console.log(worker)
-        return {
-            ...worker,
-            creationDate: format(new Date(worker.creationDate), 'dd.MM.yyyy'),
-            startDate: format(new Date(worker.startDate), 'dd.MM.yyyy')
-        }
+        worker.creationDate = format(new Date(worker.creationDate), 'dd.MM.yyyy')
+        worker.startDate = format(new Date(worker.startDate), 'dd.MM.yyyy')
+        return worker
     });
 });
 

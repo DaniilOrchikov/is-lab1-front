@@ -34,7 +34,7 @@ const CoordinatesForm = () => {
             id: coordinatesForm.currentCoordinatesId,
             x: coordinatesForm.valueX,
             y: coordinatesForm.valueY,
-            creatorName: user.name
+            creatorName: coordinatesForm.creatorName
         } as Coordinates;
         if (coordinatesForm.type === 'update') {
             dispatch(updateCoordinatesThunk(coordinates));

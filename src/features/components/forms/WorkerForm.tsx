@@ -69,7 +69,7 @@ const WorkerForm = () => {
 
         let worker: Worker = {
             id: workerForm.currentWorkerId,
-            creationDate: '',
+            creationDate: workerForm.valueCreationDate || '',
             name: workerForm.valueName,
             salary: workerForm.valueSalary,
             rating: workerForm.valueRating,
@@ -78,7 +78,7 @@ const WorkerForm = () => {
             position: workerForm.valuePosition,
             organizationId: workerForm.valueOrganizationId,
             personId: workerForm.valuePersonId,
-            creatorName: user.name,
+            creatorName: workerForm.creatorName,
             startDate: workerForm.valueStartDate!
         } as Worker;
         if (workerForm.type === 'update') {

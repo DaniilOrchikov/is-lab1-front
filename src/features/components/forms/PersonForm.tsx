@@ -45,7 +45,7 @@ const PersonForm = () => {
             height: personForm.valueHeight,
             nationality: personForm.valueNationality,
             locationId: personForm.valueLocationId,
-            creatorName: user.name
+            creatorName: personForm.creatorName
         } as Person;
         if (personForm.type === 'update') {
             dispatch(updatePersonThunk(person));
@@ -128,7 +128,7 @@ const PersonForm = () => {
                                 <SelectField label="Location"
                                              value={personForm.valueLocationId || ''}
                                              changeHandler={(event) => dispatch(setPersonFormValueLocationId(parseInt(event.target.value as string)))}
-                                             options={locations.filter((location) => location.creatorName === user.name || location.id === personForm.valueLocationId).map(location => ({
+                                             options={locations.filter((location) => location.creatorName === user.name || location.id === personForm.valueLocationId || (user.admin && location.creatorName === personForm.creatorName)).map(location => ({
                                                  label: `${location.name}: (${location.x}; ${location.y}; ${location.z})`,
                                                  value: location.id
                                              }))}
