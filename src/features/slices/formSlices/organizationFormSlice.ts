@@ -6,7 +6,7 @@ const organizationFormSlice = createSlice({
     initialState: {
         open: false,
         valueAnnualTurnover: null,
-        valueEmployeesCount: 0,
+        valueEmployeesCount: 1,
         valueFullName: "",
         valueRating: null,
         valueType: "",
@@ -66,7 +66,7 @@ const organizationFormSlice = createSlice({
             return {
                 open: state.open,
                 valueAnnualTurnover: null,
-                valueEmployeesCount: 0,
+                valueEmployeesCount: 1,
                 valueFullName: "",
                 valueRating: null,
                 valueType: "",

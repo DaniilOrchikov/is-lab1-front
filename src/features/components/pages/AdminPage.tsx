@@ -94,13 +94,13 @@ const AdminPage = () => {
                                 marginBottom: "9px",
                                 marginLeft: "15px"
                             }}>
-                                ApplicationId: {id}: Username: {userName}
+                                ApplicationId: {id}, Username: {userName}
                             </Typography>
                             <Button variant="text" sx={{color: "Green"}} onClick={() => (handleAdd(id))}>Add</Button>
                             <Button variant="text" sx={{color: "red"}}
                                     onClick={() => (handleDelete(id))}>Delete</Button>
                         </Paper>
-                    )) : <Typography variant="h6">The queue is empty</Typography>}
+                    )) : <Typography variant="h6">The list is empty</Typography>}
                 </Box>
             </Paper>
         </Box>

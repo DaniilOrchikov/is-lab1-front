@@ -7,15 +7,15 @@ import {
     Button,
 } from "@mui/material";
 import {logout, setAdmin, setInAdminQueue} from "../slices/userSlice";
-import store, {RootState} from "../../store";
+import {RootState} from "../../store";
 import {useNavigate} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import FunctionsManager from "./functions/FunctionsManager";
-import {adminApplicationStatus, adminRequest} from "../api/userApi";
+import {adminRequest} from "../api/userApi";
 import {addPopup} from "../slices/popupSlice";
 import {PopupTypes} from "../../types";
 
-const pages = ['tables', 'map'];
+const pages = ['tables', 'map', 'uploading_file'];
 
 const Header = () => {
     const navigate = useNavigate();
@@ -55,10 +55,18 @@ const Header = () => {
                                     adminRequest().then((status) => {
                                         if (status === 201) {
                                             dispatch(setAdmin(true))
-                                            dispatch(addPopup({message: `You are the administrator`, duration: 10000, type: PopupTypes.INFO}))
+                                            dispatch(addPopup({
+                                                message: `You are the administrator`,
+                                                duration: 10000,
+                                                type: PopupTypes.INFO
+                                            }))
                                         } else if (status === 200) {
                                             dispatch(setInAdminQueue(true))
-                                            dispatch(addPopup({message: `Your application has been submitted`, duration: 10000, type: PopupTypes.SUCCESS}))
+                                            dispatch(addPopup({
+                                                message: `Your application has been submitted`,
+                                                duration: 10000,
+                                                type: PopupTypes.SUCCESS
+                                            }))
                                         }
                                     })
                                 }}

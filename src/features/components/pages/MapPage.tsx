@@ -315,6 +315,7 @@ const MapPage: React.FC = () => {
                             }}
                             onDoubleClick={() => {
                                 handleClickOpen(worker.id);
+                                handleCloseGroup();
                             }}
                         >
                             <Typography variant="body2" color="#fff" sx={{
